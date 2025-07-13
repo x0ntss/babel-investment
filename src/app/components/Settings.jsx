@@ -27,6 +27,7 @@ import {
 import { FaTicketAlt, FaUserCircle, FaEnvelope, FaPhone, FaMoneyBillWave, FaTasks, FaKey, FaEthereum } from "react-icons/fa";
 import { getCurrentUser, getTeamMembers } from "../api";
 import { useAuth } from "../contexts/AuthContext";
+import { formatUSDT } from "../utils/numberFormat";
 
 export default function Settings() {
   const toast = useToast();
@@ -167,7 +168,7 @@ export default function Settings() {
             </Flex>
             <Flex align="center" mb={1} color="#fff" fontSize="md">
               <FaMoneyBillWave style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text><b>الرصيد:</b> {Number(user.balance).toFixed(2)} USDT</Text>
+              <Text><b>الرصيد:</b> {formatUSDT(user.balance)}</Text>
             </Flex>
             <Flex align="center" mb={1} color="#fff" fontSize="md">
               <FaKey style={{ marginLeft: 6, color: '#d4af37' }} />

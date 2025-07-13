@@ -36,6 +36,7 @@ const qrImage = "/images/qr.JPG";
 const trxLogo = "/images/trx.png";
 import { getCurrentUser, requestDeposit, requestWithdrawal, updateWalletAddress, isValidTronAddress, getWithdrawalConfig } from "../api";
 import { useAuth } from "../contexts/AuthContext";
+import { formatUSDT, formatRange } from "../utils/numberFormat";
 
 export default function Wallet() {
   const depositDisclosure = useDisclosure();
@@ -63,6 +64,7 @@ export default function Wallet() {
       getWithdrawalConfig()
     ])
       .then(([userData, configData]) => {
+        console.log('User data received:', userData); // Debug log
         setUser(userData);
         setWithdrawalConfig(configData);
       })
@@ -205,7 +207,7 @@ export default function Wallet() {
     if (withdrawalConfig && Number(withdrawAmount) > withdrawalConfig.maxWithdrawalAmount) {
       toast({
         title: "خطأ",
-        description: `لا يمكن سحب أكثر من ${withdrawalConfig.maxWithdrawalAmount.toFixed(2)} USDT. الحد الأقصى للسحب المتاح.`,
+        description: `لا يمكن سحب أكثر من ${formatUSDT(withdrawalConfig.maxWithdrawalAmount)}. الحد الأقصى للسحب المتاح.`,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -309,7 +311,7 @@ export default function Wallet() {
         <GridItem bg="white" rounded="xl" p={{ base: 2, md: 6 }} textAlign="center" boxShadow="md" color="gray.800">
           <Stat>
             <StatLabel fontSize="lg" mb={2}>رأس المال</StatLabel>
-            <StatNumber fontSize="2xl" color="blue.600">{Number(user.balance).toFixed(2)} USDT</StatNumber>
+            <StatNumber fontSize="2xl" color="blue.600">{formatUSDT(user.balance)}</StatNumber>
           </Stat>
         </GridItem>
 
@@ -317,9 +319,7 @@ export default function Wallet() {
           <Stat>
             <StatLabel fontSize="lg" mb={2}>الدخل اليومي المتوقع</StatLabel>
             <StatNumber fontSize="2xl" color="green.600">
-              {user.dailyIncomeMin && user.dailyIncomeMax
-                ? `${Number(user.dailyIncomeMin).toFixed(2)} - ${Number(user.dailyIncomeMax).toFixed(2)} USDT`
-                : "-"}
+              {formatRange(user.dailyIncomeMin, user.dailyIncomeMax)}
             </StatNumber>
             <Text fontSize="sm" color="gray.500">({user.percentRange ? `${user.percentRange[0]}% - ${user.percentRange[1]}%` : "-"})</Text>
           </Stat>
@@ -341,11 +341,11 @@ export default function Wallet() {
               الحد الأقصى للسحب المتاح
             </Text>
             <Text fontSize="2xl" fontWeight="bold" color="green.600" mb={2}>
-              {withdrawalConfig.maxWithdrawalAmount.toFixed(2)} USDT
+              {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
             </Text>
             <Text fontSize="sm" color="gray.500">
-              رأس المال المودع: {withdrawalConfig.vipCapital.toFixed(2)} USDT | 
-              الرصيد الحالي: {withdrawalConfig.currentBalance.toFixed(2)} USDT
+              رأس المال المودع: {formatUSDT(withdrawalConfig.vipCapital)} | 
+              الرصيد الحالي: {formatUSDT(withdrawalConfig.currentBalance)}
             </Text>
             <Text fontSize="xs" color="gray.400" mt={1}>
               يمكنك سحب الأرباح فقط 
@@ -444,11 +444,11 @@ export default function Wallet() {
                   الحد الأقصى للسحب المتاح
                 </Text>
                 <Text fontSize="lg" fontWeight="bold" color="green.600" textAlign="center" mb={2}>
-                  {withdrawalConfig.maxWithdrawalAmount.toFixed(2)} USDT
+                  {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
                 </Text>
                 <Text fontSize="xs" color="gray.600" textAlign="center">
-                  رأس المال المودع: {withdrawalConfig.vipCapital.toFixed(2)} USDT | 
-                  الرصيد الحالي: {withdrawalConfig.currentBalance.toFixed(2)} USDT
+                  رأس المال المودع: {formatUSDT(withdrawalConfig.vipCapital)} | 
+                  الرصيد الحالي: {formatUSDT(withdrawalConfig.currentBalance)}
                 </Text>
               </Box>
             )}
@@ -457,17 +457,17 @@ export default function Wallet() {
             <Input placeholder="مثال: 150" type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} mb={2} bg="white" />
             {withdrawalConfig && (
               <Text fontSize="xs" color="gray.500" mb={4} textAlign="center">
-                الحد الأقصى: {withdrawalConfig.maxWithdrawalAmount.toFixed(2)} USDT
+                الحد الأقصى: {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
               </Text>
             )}
             {/* Tax and net amount label */}
             {withdrawAmount && !isNaN(Number(withdrawAmount)) && Number(withdrawAmount) > 0 && (
               <Box mb={2} textAlign="center">
                 <Text color="orange.500" fontSize="md">
-                  الضريبة (15%): { (Number(withdrawAmount) * 0.15).toFixed(2) } USDT
+                  الضريبة (15%): { formatUSDT(Number(withdrawAmount) * 0.15) }
                 </Text>
                 <Text color="green.600" fontSize="md">
-                  صافي المبلغ بعد الضريبة: { (Number(withdrawAmount) * 0.85).toFixed(2) } USDT
+                  صافي المبلغ بعد الضريبة: { formatUSDT(Number(withdrawAmount) * 0.85) }
                 </Text>
               </Box>
             )}

@@ -18,37 +18,40 @@ import OptimizedImage from "./OptimizedImage";
 const logo = "/images/lg.png";
 import { useAuth } from "../contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { FaLock, FaCrown } from "react-icons/fa";
+import { FaLock, FaCrown, FaStar, FaCheckCircle } from "react-icons/fa";
+import { formatUSDT, formatRange } from "../utils/numberFormat";
+import { VIP_LEVELS } from "../utils/vipLevels";
 
 const Home = React.memo(function Home() {
   const { user } = useAuth();
   const router = useRouter();
 
-  const VIP_LEVELS = [
-    { vip: "VIP 1", invest: 25, percent: "1% - 2%" },
-    { vip: "VIP 2", invest: 50, percent: "1% - 2%" },
-    { vip: "VIP 3", invest: 150, percent: "1% - 2%" },
-    { vip: "VIP 4", invest: 300, percent: "1% - 2%" },
-    { vip: "VIP 5", invest: 500, percent: "1% - 2%" },
-    { vip: "VIP 6", invest: 800, percent: "1% - 2%" },
-    { vip: "VIP 7", invest: 1500, percent: "1% - 2%" },
-    { vip: "VIP 8", invest: 3000, percent: "1% - 2%" },
-    { vip: "VIP 9", invest: 5000, percent: "1% - 2%" },
-    { vip: "VIP 10", invest: 8000, percent: "1% - 2%" },
-    { vip: "VIP 11", invest: 15000, percent: "1% - 2%" },
-    { vip: "VIP 12", invest: 30000, percent: "1% - 2%" },
-  ];
+  // Transform VIP_LEVELS for display
+  const DISPLAY_LEVELS = VIP_LEVELS.map(lvl => ({
+    vip: `VIP ${lvl.level}`,
+    invest: lvl.min,
+    percent: `${lvl.percent[0]}% - ${lvl.percent[1]}%`
+  }));
 
-  const getVipColor = (idx) => {
-    if (idx < 4) return { bg: "gray.100", border: "1px solid #CBD5E0", badge: "gray" }; // Silver
-    if (idx < 8) return { bg: "yellow.100", border: "1px solid #ECC94B", badge: "yellow" }; // Gold
-    return { bg: "blue.100", border: "1px solid #63B3ED", badge: "blue" }; // Platinum
+  const getVipColor = (idx, isCurrentLevel = false) => {
+    if (isCurrentLevel) {
+      return { 
+        bg: "green.50", 
+        border: "2px solid #48BB78", 
+        badge: "green",
+        textColor: "green.700",
+        badgeColor: "green.500"
+      };
+    }
+    if (idx < 4) return { bg: "gray.100", border: "1px solid #CBD5E0", badge: "gray", textColor: "gray.700", badgeColor: "gray.500" }; // Silver
+    if (idx < 8) return { bg: "yellow.100", border: "1px solid #ECC94B", badge: "yellow", textColor: "yellow.700", badgeColor: "yellow.500" }; // Gold
+    return { bg: "blue.100", border: "1px solid #63B3ED", badge: "blue", textColor: "blue.700", badgeColor: "blue.500" }; // Platinum
   };
 
   function calcDailyIncome(invest) {
-    const min = (invest * 0.01).toFixed(2);
-    const max = (invest * 0.02).toFixed(2);
-    return `${min} – ${max} USDT`;
+    const min = invest * 0.01;
+    const max = invest * 0.02;
+    return formatRange(min, max);
   }
 
   return (
@@ -130,17 +133,48 @@ const Home = React.memo(function Home() {
         <Heading mb={8} fontSize="2xl" textAlign="center">
           مستويات VIP
         </Heading>
+        
+        {/* Current Level Summary */}
+        {user && (
+          <Box 
+            bg="green.50" 
+            border="2px solid green.200" 
+            borderRadius="xl" 
+            p={6} 
+            mb={8} 
+            maxW="md" 
+            mx="auto"
+            textAlign="center"
+          >
+            <Flex direction="column" align="center">
+              <Icon as={FaCrown} color="green.500" boxSize={8} mb={2} />
+              <Text fontSize="xl" fontWeight="bold" color="green.700" mb={1}>
+                مستواك الحالي
+              </Text>
+              <Text fontSize="2xl" fontWeight="bold" color="green.600" mb={2}>
+                {(() => {
+                  const userBalance = user.balance ?? 0;
+                  const highestUnlockedIdx = DISPLAY_LEVELS.reduce((acc, lvl, idx) => (userBalance >= lvl.invest ? idx : acc), -1);
+                  return highestUnlockedIdx >= 0 ? DISPLAY_LEVELS[highestUnlockedIdx].vip : "VIP 0";
+                })()}
+              </Text>
+              <Text fontSize="sm" color="green.600">
+                رصيدك: {formatUSDT(user.balance)}
+              </Text>
+            </Flex>
+          </Box>
+        )}
         {/* Progress to next VIP */}
         {(() => {
           const userBalance = user?.balance ?? 0;
-          const nextVipIdx = VIP_LEVELS.findIndex((lvl) => userBalance < lvl.invest);
-          const nextVip = nextVipIdx !== -1 ? VIP_LEVELS[nextVipIdx] : null;
+          const nextVipIdx = DISPLAY_LEVELS.findIndex((lvl) => userBalance < lvl.invest);
+          const nextVip = nextVipIdx !== -1 ? DISPLAY_LEVELS[nextVipIdx] : null;
           const progressToNext = nextVip ? Math.min(100, Math.round((userBalance / nextVip.invest) * 100)) : 100;
           return nextVip ? (
             <Box maxW="lg" mx="auto" mb={10}>
-              <Text textAlign="center" mb={2} color="gray.700">
-                تحتاج إلى <b>{nextVip.invest - userBalance}</b> USDT إضافية لفتح {nextVip.vip}
-              </Text>
+                          <Text textAlign="center" mb={2} color="gray.700">
+              تحتاج إلى <b>{formatUSDT(nextVip.invest - userBalance)}</b> إضافية لفتح {nextVip.vip}
+            </Text>
               <Box bg="gray.100" borderRadius="full" h="10px" w="100%" mb={2}>
                 <Box bg="teal.400" h="10px" borderRadius="full" width={`${progressToNext}%`} transition="width 0.5s" />
               </Box>
@@ -150,29 +184,26 @@ const Home = React.memo(function Home() {
         <SimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={4} maxW="6xl" mx="auto">
           {(() => {
             const userBalance = user?.balance ?? 0;
-            const highestUnlockedIdx = VIP_LEVELS.reduce((acc, lvl, idx) => (userBalance >= lvl.invest ? idx : acc), -1);
-            return VIP_LEVELS.map((item, idx) => {
-              const { bg, border, badge } = getVipColor(idx);
+            const highestUnlockedIdx = DISPLAY_LEVELS.reduce((acc, lvl, idx) => (userBalance >= lvl.invest ? idx : acc), -1);
+            return DISPLAY_LEVELS.map((item, idx) => {
               const unlocked = userBalance >= item.invest;
-              const isHighest = idx === highestUnlockedIdx && unlocked;
+              const isCurrentLevel = idx === highestUnlockedIdx && unlocked;
+              const { bg, border, badge, textColor, badgeColor } = getVipColor(idx, isCurrentLevel);
               return (
                 <Box
                   key={item.vip}
                   bg={bg}
-                  border={
-                    isHighest
-                      ? "2px solid #F6AD55"
-                      : unlocked
-                      ? border
-                      : "1.5px dashed #A0AEC0"
-                  }
+                  border={border}
                   borderRadius="lg"
-                  boxShadow={isHighest ? "0 0 0 2px #F6E05E" : "sm"}
+                  boxShadow={isCurrentLevel ? "0 0 20px rgba(72, 187, 120, 0.3)" : "sm"}
                   p={{ base: 2, md: 4 }}
                   textAlign="center"
                   position="relative"
-                  transition="transform 0.2s, box-shadow 0.2s, border 0.2s"
-                  _hover={{ transform: unlocked ? "translateY(-4px) scale(1.02)" : undefined, boxShadow: unlocked ? "md" : undefined }}
+                  transition="all 0.3s ease"
+                  _hover={{ 
+                    transform: unlocked ? "translateY(-4px) scale(1.02)" : undefined, 
+                    boxShadow: unlocked ? (isCurrentLevel ? "0 0 25px rgba(72, 187, 120, 0.4)" : "md") : undefined 
+                  }}
                   opacity={1}
                   filter="none"
                   cursor="pointer"
@@ -183,6 +214,7 @@ const Home = React.memo(function Home() {
                   alignItems="center"
                   mx="auto"
                   maxW={{ base: "95%", sm: "100%" }}
+                  animation={isCurrentLevel ? "pulse 2s infinite" : "none"}
                 >
                   {/* VIP Badge */}
                   <Badge
@@ -195,24 +227,52 @@ const Home = React.memo(function Home() {
                     display="inline-flex"
                     alignItems="center"
                     opacity={unlocked ? 1 : 0.7}
+                    bg={isCurrentLevel ? "green.500" : undefined}
+                    color={isCurrentLevel ? "white" : undefined}
                   >
                     {item.vip}
-                    {isHighest && (
-                      <Icon as={FaCrown} color="orange.400" ml={1} boxSize={4} title="مستواك الحالي" />
+                    {isCurrentLevel && (
+                      <Icon as={FaCrown} color="yellow.300" ml={1} boxSize={4} title="مستواك الحالي" />
+                    )}
+                    {unlocked && !isCurrentLevel && (
+                      <Icon as={FaCheckCircle} color={badgeColor} ml={1} boxSize={3} title="مفتوح" />
                     )}
                   </Badge>
                   {/* Investment Amount */}
-                  <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="bold" mb={1} color={unlocked ? "gray.700" : "gray.400"}>
-                    {item.invest} USDT
+                  <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="bold" mb={1} color={unlocked ? (isCurrentLevel ? "green.700" : textColor) : "gray.400"}>
+                    {formatUSDT(item.invest)}
                   </Text>
                   {/* Percent Info */}
-                  <Text fontSize={{ base: "xs", md: "sm" }} color={unlocked ? "gray.600" : "gray.400"} mb={0.5}>
+                  <Text fontSize={{ base: "xs", md: "sm" }} color={unlocked ? (isCurrentLevel ? "green.600" : "gray.600") : "gray.400"} mb={0.5}>
                     نسبة العائد اليومي: <b>{item.percent}</b>
                   </Text>
                   {/* Daily Income */}
-                  <Text fontSize={{ base: "xs", md: "sm" }} color={unlocked ? "teal.600" : "gray.400"} fontWeight="medium" mb={1}>
+                  <Text fontSize={{ base: "xs", md: "sm" }} color={unlocked ? (isCurrentLevel ? "green.600" : "teal.600") : "gray.400"} fontWeight="medium" mb={1}>
                     الدخل اليومي: <b>{calcDailyIncome(item.invest)}</b>
                   </Text>
+                  
+                  {/* Current Level Indicator */}
+                  {isCurrentLevel && (
+                    <Box
+                      position="absolute"
+                      top={-2}
+                      right={-2}
+                      bg="green.500"
+                      color="white"
+                      borderRadius="full"
+                      px={2}
+                      py={1}
+                      fontSize="xs"
+                      fontWeight="bold"
+                      zIndex={4}
+                      boxShadow="lg"
+                    >
+                      <Flex align="center">
+                        <Icon as={FaStar} mr={1} boxSize={3} />
+                        المستوى الحالي
+                      </Flex>
+                    </Box>
+                  )}
                   {/* Lock icon in the top right corner for locked cards */}
                   {!unlocked && (
                     <Box
@@ -231,7 +291,7 @@ const Home = React.memo(function Home() {
                   {/* Lock message at the bottom for locked cards */}
                   {!unlocked && (
                     <Text mt={2} color="gray.500" fontWeight="bold" fontSize="xs">
-                      مغلق – يتطلب {item.invest} USDT
+                      مغلق – يتطلب {formatUSDT(item.invest)}
                     </Text>
                   )}
         </Box>
@@ -309,6 +369,20 @@ const Home = React.memo(function Home() {
           © {new Date().getFullYear()} منصة بابل. جميع الحقوق محفوظة.
         </Text>
       </Box>
+      
+      <style jsx global>{`
+        @keyframes pulse {
+          0% {
+            box-shadow: 0 0 20px rgba(72, 187, 120, 0.3);
+          }
+          50% {
+            box-shadow: 0 0 25px rgba(72, 187, 120, 0.5);
+          }
+          100% {
+            box-shadow: 0 0 20px rgba(72, 187, 120, 0.3);
+          }
+        }
+      `}</style>
     </>
   );
 });

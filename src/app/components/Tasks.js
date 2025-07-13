@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Heading, Text, Button, useToast, Spinner, Flex, Circle } from "@chakra-ui/react";
 import { getDailyTaskStatus, completeDailyTask, claimDailyReward, getCurrentUser } from "../api";
+import { formatUSDT, formatRange } from "../utils/numberFormat";
 
 export default function Tasks() {
   const [loading, setLoading] = useState(true);
@@ -125,8 +126,8 @@ export default function Tasks() {
   };
 
   // Calculate dynamic reward (1–2% of balance)
-  const minReward = (userBalance * 0.01).toFixed(2);
-  const maxReward = (userBalance * 0.02).toFixed(2);
+  const minReward = userBalance * 0.01;
+  const maxReward = userBalance * 0.02;
 
   // Determine task status text
   const getTaskStatusText = () => {
@@ -229,12 +230,12 @@ export default function Tasks() {
           {/* Reward Information */}
           <Box mt={6}>
             <Text fontSize="md" color="gray.600" mb={4}>
-              قيمة المكافأة المتوقعة: {minReward} - {maxReward} USDT
+              قيمة المكافأة المتوقعة: {formatRange(minReward, maxReward)}
             </Text>
             
             {rewardClaimed && (
               <Text color="green.600" fontWeight="bold" mb={4}>
-                تم استلام مكافأة اليوم: {lastRewardAmount.toFixed(2)} USDT
+                تم استلام مكافأة اليوم: {formatUSDT(lastRewardAmount)}
               </Text>
             )}
             

@@ -1,6 +1,7 @@
 import dbConnect from '../lib/db.js';
 import User from '../lib/User.js';
 import { protect } from '../lib/auth.js';
+import { getLevelAndIncome } from '../../../app/utils/vipLevels.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -21,7 +22,17 @@ export default async function handler(req, res) {
     const user = await User.findById(req.user._id).select('-password');
     
     if (user) {
-      res.json(user);
+      // Calculate level and daily income based on balance
+      const { level, dailyIncomeMin, dailyIncomeMax, percentRange } = getLevelAndIncome(user.balance);
+      
+      // Return user data with calculated fields
+      res.json({
+        ...user.toObject(),
+        level,
+        dailyIncomeMin,
+        dailyIncomeMax,
+        percentRange,
+      });
     } else {
       res.status(404).json({ message: 'User not found' });
     }
