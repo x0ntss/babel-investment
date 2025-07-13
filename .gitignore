@@ -1,0 +1,14 @@
+# Ignore dependencies
+node_modules/
+
+# Ignore build output
+.next/
+dist/
+
+# Ignore logs
+npm-debug.log*
+yarn-debug.log*
+
+# Optional system files
+.DS_Store
+Thumbs.db
