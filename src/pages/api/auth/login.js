@@ -45,6 +45,9 @@ export default async function handler(req, res) {
     console.error('Error stack:', error.stack);
     console.error('Environment check - JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Missing');
     console.error('Environment check - MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Missing');
-    res.status(500).json({ message: 'Server error' });
-  }
+res.status(500).json({
+  error: true,
+  message: 'Login API Error',
+  env: process.env
+});  }
 } 
