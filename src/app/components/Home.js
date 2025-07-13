@@ -126,8 +126,6 @@ const Home = React.memo(function Home() {
         </Flex>
       </Box>
 
-   
-
       {/* Section 3: مستويات VIP (بطاقات) */}
       <Box bg="white" color="black" py={{ base: 8, md: 20 }} px={8}>
         <Heading mb={8} fontSize="2xl" textAlign="center">
@@ -164,6 +162,7 @@ const Home = React.memo(function Home() {
             </Flex>
           </Box>
         )}
+        
         {/* Progress to next VIP */}
         {(() => {
           const userBalance = user?.balance ?? 0;
@@ -172,15 +171,16 @@ const Home = React.memo(function Home() {
           const progressToNext = nextVip ? Math.min(100, Math.round((userBalance / nextVip.invest) * 100)) : 100;
           return nextVip ? (
             <Box maxW="lg" mx="auto" mb={10}>
-                          <Text textAlign="center" mb={2} color="gray.700">
-              تحتاج إلى <b>{formatUSDT(nextVip.invest - userBalance)}</b> إضافية لفتح {nextVip.vip}
-            </Text>
+              <Text textAlign="center" mb={2} color="gray.700">
+                تحتاج إلى <b>{formatUSDT(nextVip.invest - userBalance)}</b> إضافية لفتح {nextVip.vip}
+              </Text>
               <Box bg="gray.100" borderRadius="full" h="10px" w="100%" mb={2}>
                 <Box bg="teal.400" h="10px" borderRadius="full" width={`${progressToNext}%`} transition="width 0.5s" />
               </Box>
             </Box>
           ) : null;
         })()}
+        
         <SimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={4} maxW="6xl" mx="auto">
           {(() => {
             const userBalance = user?.balance ?? 0;
@@ -196,7 +196,7 @@ const Home = React.memo(function Home() {
                   border={border}
                   borderRadius="lg"
                   boxShadow={isCurrentLevel ? "0 0 20px rgba(72, 187, 120, 0.3)" : "sm"}
-                  p={{ base: 2, md: 4 }}
+                  p={{ base: 3, md: 4 }}
                   textAlign="center"
                   position="relative"
                   transition="all 0.3s ease"
@@ -204,50 +204,70 @@ const Home = React.memo(function Home() {
                     transform: unlocked ? "translateY(-4px) scale(1.02)" : undefined, 
                     boxShadow: unlocked ? (isCurrentLevel ? "0 0 25px rgba(72, 187, 120, 0.4)" : "md") : undefined 
                   }}
-                  opacity={1}
-                  filter="none"
-                  cursor="pointer"
-                  minH={{ base: "120px", md: "160px" }}
+                  opacity={unlocked ? 1 : 0.6}
+                  cursor={unlocked ? "pointer" : "default"}
+                  minH={{ base: "140px", md: "180px" }}
                   display="flex"
                   flexDirection="column"
                   justifyContent="center"
                   alignItems="center"
                   mx="auto"
-                  maxW={{ base: "95%", sm: "100%" }}
+                  maxW={{ base: "100%", sm: "100%" }}
                   animation={isCurrentLevel ? "pulse 2s infinite" : "none"}
                 >
                   {/* VIP Badge */}
                   <Badge
                     colorScheme={badge}
-                    fontSize={{ base: "xs", md: "md" }}
-                    px={2}
-                    py={0.5}
+                    fontSize={{ base: "xs", md: "sm" }}
+                    px={3}
+                    py={1}
                     borderRadius="full"
-                    mb={1}
+                    mb={2}
                     display="inline-flex"
                     alignItems="center"
+                    gap={1}
                     opacity={unlocked ? 1 : 0.7}
                     bg={isCurrentLevel ? "green.500" : undefined}
                     color={isCurrentLevel ? "white" : undefined}
                   >
                     {item.vip}
                     {isCurrentLevel && (
-                      <Icon as={FaCrown} color="yellow.300" ml={1} boxSize={4} title="مستواك الحالي" />
+                      <Icon as={FaCrown} color="yellow.300" boxSize={4} title="مستواك الحالي" />
                     )}
                     {unlocked && !isCurrentLevel && (
-                      <Icon as={FaCheckCircle} color={badgeColor} ml={1} boxSize={3} title="مفتوح" />
+                      <Icon as={FaCheckCircle} color={badgeColor} boxSize={3} title="مفتوح" />
                     )}
                   </Badge>
+                  
                   {/* Investment Amount */}
-                  <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="bold" mb={1} color={unlocked ? (isCurrentLevel ? "green.700" : textColor) : "gray.400"}>
+                  <Text 
+                    fontSize={{ base: "md", md: "lg" }} 
+                    fontWeight="bold" 
+                    mb={2} 
+                    color={unlocked ? (isCurrentLevel ? "green.700" : textColor) : "gray.400"}
+                    lineHeight="1.2"
+                  >
                     {formatUSDT(item.invest)}
                   </Text>
+                  
                   {/* Percent Info */}
-                  <Text fontSize={{ base: "xs", md: "sm" }} color={unlocked ? (isCurrentLevel ? "green.600" : "gray.600") : "gray.400"} mb={0.5}>
+                  <Text 
+                    fontSize={{ base: "xs", md: "sm" }} 
+                    color={unlocked ? (isCurrentLevel ? "green.600" : "gray.600") : "gray.400"} 
+                    mb={1}
+                    lineHeight="1.3"
+                  >
                     نسبة العائد اليومي: <b>{item.percent}</b>
                   </Text>
+                  
                   {/* Daily Income */}
-                  <Text fontSize={{ base: "xs", md: "sm" }} color={unlocked ? (isCurrentLevel ? "green.600" : "teal.600") : "gray.400"} fontWeight="medium" mb={1}>
+                  <Text 
+                    fontSize={{ base: "xs", md: "sm" }} 
+                    color={unlocked ? (isCurrentLevel ? "green.600" : "teal.600") : "gray.400"} 
+                    fontWeight="medium" 
+                    mb={2}
+                    lineHeight="1.3"
+                  >
                     الدخل اليومي: <b>{calcDailyIncome(item.invest)}</b>
                   </Text>
                   
@@ -267,34 +287,42 @@ const Home = React.memo(function Home() {
                       zIndex={4}
                       boxShadow="lg"
                     >
-                      <Flex align="center">
-                        <Icon as={FaStar} mr={1} boxSize={3} />
+                      <Flex align="center" gap={1}>
+                        <Icon as={FaStar} boxSize={3} />
                         المستوى الحالي
                       </Flex>
                     </Box>
                   )}
-                  {/* Lock icon in the top right corner for locked cards */}
+                  
+                  {/* Lock icon for locked cards */}
                   {!unlocked && (
                     <Box
                       position="absolute"
                       top={2}
                       right={2}
-                      bg="rgba(255,255,255,0.8)"
+                      bg="rgba(255,255,255,0.9)"
                       borderRadius="full"
-                      p={0.5}
+                      p={1}
                       zIndex={3}
                       boxShadow="sm"
                     >
                       <Icon as={FaLock} color="gray.500" boxSize={4} />
-      </Box>
+                    </Box>
                   )}
-                  {/* Lock message at the bottom for locked cards */}
+                  
+                  {/* Lock message for locked cards */}
                   {!unlocked && (
-                    <Text mt={2} color="gray.500" fontWeight="bold" fontSize="xs">
+                    <Text 
+                      mt={2} 
+                      color="gray.500" 
+                      fontWeight="bold" 
+                      fontSize="xs"
+                      textAlign="center"
+                    >
                       مغلق – يتطلب {formatUSDT(item.invest)}
                     </Text>
                   )}
-        </Box>
+                </Box>
               );
             });
           })()}
@@ -334,19 +362,21 @@ const Home = React.memo(function Home() {
           </Box>
         </Stack>
       </Box>
-   {/* Section 2: المميزات */}
-   <Box bg="rgba(0,0,0,0.4)" py={{ base: 8, md: 20 }} px={{ base: 2, md: 8 }} textAlign="right">
-   <Heading mb={8} fontSize="2xl" textAlign="center">
-     مميزات منصة بابل
-   </Heading>
-   <Stack spacing={5} maxW="4xl" mx="auto" fontSize="lg">
-     <Text>✅ عوائد يومية ثابتة تبدأ من 1% الى 2% يوميًا حسب رأس المال.</Text>
-     <Text>✅ تنوع المستويات لتناسب جميع رؤوس الأموال.</Text>
-     <Text>✅ دعم احترافي وخدمة عملاء على مدار الساعة.</Text>
-     <Text>✅ لوحة تحكم متقدمة لمتابعة أرباحك وسحوباتك.</Text>
-     <Text>✅ نظام إحالة يتيح لك زيادة أرباحك من دعوة أصدقائك.</Text>
-   </Stack>
- </Box>
+      
+      {/* Section 2: المميزات */}
+      <Box bg="rgba(0,0,0,0.4)" py={{ base: 8, md: 20 }} px={{ base: 2, md: 8 }} textAlign="right">
+        <Heading mb={8} fontSize="2xl" textAlign="center">
+          مميزات منصة بابل
+        </Heading>
+        <Stack spacing={5} maxW="4xl" mx="auto" fontSize="lg">
+          <Text>✅ عوائد يومية ثابتة تبدأ من 1% الى 2% يوميًا حسب رأس المال.</Text>
+          <Text>✅ تنوع المستويات لتناسب جميع رؤوس الأموال.</Text>
+          <Text>✅ دعم احترافي وخدمة عملاء على مدار الساعة.</Text>
+          <Text>✅ لوحة تحكم متقدمة لمتابعة أرباحك وسحوباتك.</Text>
+          <Text>✅ نظام إحالة يتيح لك زيادة أرباحك من دعوة أصدقائك.</Text>
+        </Stack>
+      </Box>
+      
       <Box
         bg="blackAlpha.800"
         color="white"
@@ -359,11 +389,9 @@ const Home = React.memo(function Home() {
           justify="center"
           spacing={6}
         >
- 
           <Link href="https://t.me/llnvestorshouse" target="_blank" rel="noopener noreferrer">
             تيليجرام
           </Link>
-       
         </Stack>
         <Text mt={4} fontSize="sm">
           © {new Date().getFullYear()} منصة بابل. جميع الحقوق محفوظة.
