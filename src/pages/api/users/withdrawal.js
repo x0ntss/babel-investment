@@ -37,6 +37,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'Insufficient balance' });
     }
 
+    // Calculate max withdrawal based on completed reward transactions
+    const totalRewards = user.transactions
+      .filter(tx => tx.type === 'reward' && tx.status === 'completed')
+      .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+    if (amount > totalRewards) {
+      return res.status(400).json({ message: `لا يمكن سحب أكثر من ${totalRewards.toFixed(2)} USDT. الحد الأقصى للسحب المتاح.` });
+    }
+
     // Add transaction to user
     user.transactions.push({
       type: 'withdrawal',

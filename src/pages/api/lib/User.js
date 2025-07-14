@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 
 const transactionSchema = new mongoose.Schema({
-  type: { type: String, enum: ['deposit', 'withdrawal'], required: true },
+  type: { type: String, enum: ['deposit', 'withdrawal', 'reward'], required: true },
   amount: { type: Number, required: true },
   proofImage: { type: String }, // For deposit only
   status: { type: String, enum: ['pending', 'completed', 'rejected'], default: 'pending' },

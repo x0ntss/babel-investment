@@ -26,11 +26,11 @@ export const updateAccountSettings = async (data) => {
   return res.json();
 };
 
-export const loginUser = async (email, password) => {
+export const loginUser = async (identifier, password) => {
   const res = await fetch(`${AUTH_BASE}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ identifier, password }),
     credentials: 'include',
   });
   if (!res.ok) throw new Error('Login failed');

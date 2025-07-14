@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { FaLock, FaCrown, FaStar, FaCheckCircle } from "react-icons/fa";
 import { formatUSDT, formatRange } from "../utils/numberFormat";
 import { VIP_LEVELS } from "../utils/vipLevels";
+import TopBannerCarousel from "./TopBannerCarousel";
 
 const Home = React.memo(function Home() {
   const { user } = useAuth();
@@ -33,19 +34,93 @@ const Home = React.memo(function Home() {
     percent: `${lvl.percent[0]}% - ${lvl.percent[1]}%`
   }));
 
-  const getVipColor = (idx, isCurrentLevel = false) => {
+  const getVipCardStyle = (idx, isUnlocked, isCurrentLevel) => {
     if (isCurrentLevel) {
-      return { 
-        bg: "green.50", 
-        border: "2px solid #48BB78", 
-        badge: "green",
-        textColor: "green.700",
-        badgeColor: "green.500"
+      // Current level - vibrant green with glow effect
+      return {
+        bg: "linear-gradient(135deg, green.50 0%, green.100 100%)",
+        border: "2px solid",
+        borderColor: "green.400",
+        boxShadow: "0 0 25px rgba(72, 187, 120, 0.4), 0 4px 12px rgba(0, 0, 0, 0.1)",
+        transform: "scale(1.02)",
+        _hover: {
+          transform: "scale(1.05)",
+          boxShadow: "0 0 30px rgba(72, 187, 120, 0.6), 0 8px 20px rgba(0, 0, 0, 0.15)",
+        }
       };
     }
-    if (idx < 4) return { bg: "gray.100", border: "1px solid #CBD5E0", badge: "gray", textColor: "gray.700", badgeColor: "gray.500" }; // Silver
-    if (idx < 8) return { bg: "yellow.100", border: "1px solid #ECC94B", badge: "yellow", textColor: "yellow.700", badgeColor: "yellow.500" }; // Gold
-    return { bg: "blue.100", border: "1px solid #63B3ED", badge: "blue", textColor: "blue.700", badgeColor: "blue.500" }; // Platinum
+    
+    if (isUnlocked) {
+      // Unlocked cards - vibrant social-style colors based on tier
+      if (idx < 4) {
+        // Silver tier - blue gradient
+        return {
+          bg: "linear-gradient(135deg, blue.50 0%, blue.100 100%)",
+          border: "2px solid",
+          borderColor: "blue.400",
+          boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1)",
+          _hover: {
+            transform: "translateY(-4px) scale(1.02)",
+            boxShadow: "0 8px 20px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15)",
+          }
+        };
+      } else if (idx < 8) {
+        // Gold tier - orange gradient
+        return {
+          bg: "linear-gradient(135deg, orange.50 0%, orange.100 100%)",
+          border: "2px solid",
+          borderColor: "orange.400",
+          boxShadow: "0 4px 12px rgba(245, 101, 101, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1)",
+          _hover: {
+            transform: "translateY(-4px) scale(1.02)",
+            boxShadow: "0 8px 20px rgba(245, 101, 101, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15)",
+          }
+        };
+      } else {
+        // Platinum tier - purple gradient
+        return {
+          bg: "linear-gradient(135deg, purple.50 0%, purple.100 100%)",
+          border: "2px solid",
+          borderColor: "purple.400",
+          boxShadow: "0 4px 12px rgba(147, 51, 234, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1)",
+          _hover: {
+            transform: "translateY(-4px) scale(1.02)",
+            boxShadow: "0 8px 20px rgba(147, 51, 234, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15)",
+          }
+        };
+      }
+    } else {
+      // Locked cards - muted grayscale
+      return {
+        bg: "gray.50",
+        border: "1px solid",
+        borderColor: "gray.300",
+        opacity: 0.6,
+        filter: "grayscale(0.3)",
+        _hover: {
+          transform: "none",
+          boxShadow: "sm",
+        }
+      };
+    }
+  };
+
+  const getVipBadgeStyle = (idx, isUnlocked, isCurrentLevel) => {
+    if (isCurrentLevel) {
+      return {
+        bg: "green.500",
+        color: "white",
+        boxShadow: "0 2px 8px rgba(72, 187, 120, 0.4)",
+      };
+    }
+    
+    if (isUnlocked) {
+      if (idx < 4) return { bg: "blue.500", color: "white" };
+      if (idx < 8) return { bg: "orange.500", color: "white" };
+      return { bg: "purple.500", color: "white" };
+    }
+    
+    return { bg: "gray.400", color: "white" };
   };
 
   function calcDailyIncome(invest) {
@@ -56,6 +131,7 @@ const Home = React.memo(function Home() {
 
   return (
     <>
+      <TopBannerCarousel />
       {/* Section 1: المقدمة */}
       <Box
         p={{ base: 2, md: 8 }}
@@ -135,14 +211,15 @@ const Home = React.memo(function Home() {
         {/* Current Level Summary */}
         {user && (
           <Box 
-            bg="green.50" 
-            border="2px solid green.200" 
+            bg="linear-gradient(135deg, green.50 0%, green.100 100%)"
+            border="2px solid green.400"
             borderRadius="xl" 
             p={6} 
             mb={8} 
             maxW="md" 
             mx="auto"
             textAlign="center"
+            boxShadow="0 0 25px rgba(72, 187, 120, 0.3)"
           >
             <Flex direction="column" align="center">
               <Icon as={FaCrown} color="green.500" boxSize={8} mb={2} />
@@ -152,8 +229,15 @@ const Home = React.memo(function Home() {
               <Text fontSize="2xl" fontWeight="bold" color="green.600" mb={2}>
                 {(() => {
                   const userBalance = user.balance ?? 0;
-                  const highestUnlockedIdx = DISPLAY_LEVELS.reduce((acc, lvl, idx) => (userBalance >= lvl.invest ? idx : acc), -1);
-                  return highestUnlockedIdx >= 0 ? DISPLAY_LEVELS[highestUnlockedIdx].vip : "VIP 0";
+                  // Find the highest level the user has reached
+                  let currentLevel = 0;
+                  for (const lvl of VIP_LEVELS) {
+                    if (userBalance >= lvl.min) {
+                      currentLevel = lvl.level;
+                      break; // VIP_LEVELS is ordered from highest to lowest, so first match is highest level
+                    }
+                  }
+                  return currentLevel > 0 ? `VIP ${currentLevel}` : "VIP 0";
                 })()}
               </Text>
               <Text fontSize="sm" color="green.600">
@@ -175,7 +259,13 @@ const Home = React.memo(function Home() {
                 تحتاج إلى <b>{formatUSDT(nextVip.invest - userBalance)}</b> إضافية لفتح {nextVip.vip}
               </Text>
               <Box bg="gray.100" borderRadius="full" h="10px" w="100%" mb={2}>
-                <Box bg="teal.400" h="10px" borderRadius="full" width={`${progressToNext}%`} transition="width 0.5s" />
+                <Box 
+                  bg="linear-gradient(90deg, teal.400 0%, green.400 100%)" 
+                  h="10px" 
+                  borderRadius="full" 
+                  width={`${progressToNext}%`} 
+                  transition="width 0.5s" 
+                />
               </Box>
             </Box>
           ) : null;
@@ -184,27 +274,30 @@ const Home = React.memo(function Home() {
         <SimpleGrid columns={{ base: 2, sm: 2, md: 3, lg: 4 }} spacing={4} maxW="6xl" mx="auto">
           {(() => {
             const userBalance = user?.balance ?? 0;
-            const highestUnlockedIdx = DISPLAY_LEVELS.reduce((acc, lvl, idx) => (userBalance >= lvl.invest ? idx : acc), -1);
+            // Calculate current level properly
+            let currentLevel = 0;
+            for (const lvl of VIP_LEVELS) {
+              if (userBalance >= lvl.min) {
+                currentLevel = lvl.level;
+                break;
+              }
+            }
+            
             return DISPLAY_LEVELS.map((item, idx) => {
               const unlocked = userBalance >= item.invest;
-              const isCurrentLevel = idx === highestUnlockedIdx && unlocked;
-              const { bg, border, badge, textColor, badgeColor } = getVipColor(idx, isCurrentLevel);
+              // Check if this card represents the current level
+              const isCurrentLevel = item.vip === `VIP ${currentLevel}` && unlocked;
+              const cardStyle = getVipCardStyle(idx, unlocked, isCurrentLevel);
+              const badgeStyle = getVipBadgeStyle(idx, unlocked, isCurrentLevel);
+              
               return (
                 <Box
                   key={item.vip}
-                  bg={bg}
-                  border={border}
                   borderRadius="lg"
-                  boxShadow={isCurrentLevel ? "0 0 20px rgba(72, 187, 120, 0.3)" : "sm"}
                   p={{ base: 3, md: 4 }}
                   textAlign="center"
                   position="relative"
                   transition="all 0.3s ease"
-                  _hover={{ 
-                    transform: unlocked ? "translateY(-4px) scale(1.02)" : undefined, 
-                    boxShadow: unlocked ? (isCurrentLevel ? "0 0 25px rgba(72, 187, 120, 0.4)" : "md") : undefined 
-                  }}
-                  opacity={unlocked ? 1 : 0.6}
                   cursor={unlocked ? "pointer" : "default"}
                   minH={{ base: "140px", md: "180px" }}
                   display="flex"
@@ -214,10 +307,10 @@ const Home = React.memo(function Home() {
                   mx="auto"
                   maxW={{ base: "100%", sm: "100%" }}
                   animation={isCurrentLevel ? "pulse 2s infinite" : "none"}
+                  {...cardStyle}
                 >
                   {/* VIP Badge */}
                   <Badge
-                    colorScheme={badge}
                     fontSize={{ base: "xs", md: "sm" }}
                     px={3}
                     py={1}
@@ -226,16 +319,14 @@ const Home = React.memo(function Home() {
                     display="inline-flex"
                     alignItems="center"
                     gap={1}
-                    opacity={unlocked ? 1 : 0.7}
-                    bg={isCurrentLevel ? "green.500" : undefined}
-                    color={isCurrentLevel ? "white" : undefined}
+                    {...badgeStyle}
                   >
                     {item.vip}
                     {isCurrentLevel && (
                       <Icon as={FaCrown} color="yellow.300" boxSize={4} title="مستواك الحالي" />
                     )}
                     {unlocked && !isCurrentLevel && (
-                      <Icon as={FaCheckCircle} color={badgeColor} boxSize={3} title="مفتوح" />
+                      <Icon as={FaCheckCircle} color="white" boxSize={3} title="مفتوح" />
                     )}
                   </Badge>
                   
@@ -244,7 +335,7 @@ const Home = React.memo(function Home() {
                     fontSize={{ base: "md", md: "lg" }} 
                     fontWeight="bold" 
                     mb={2} 
-                    color={unlocked ? (isCurrentLevel ? "green.700" : textColor) : "gray.400"}
+                    color={unlocked ? (isCurrentLevel ? "green.700" : "gray.700") : "gray.400"}
                     lineHeight="1.2"
                   >
                     {formatUSDT(item.invest)}
@@ -273,41 +364,71 @@ const Home = React.memo(function Home() {
                   
                   {/* Current Level Indicator */}
                   {isCurrentLevel && (
-                    <Box
-                      position="absolute"
-                      top={-2}
-                      right={-2}
-                      bg="green.500"
-                      color="white"
-                      borderRadius="full"
-                      px={2}
-                      py={1}
-                      fontSize="xs"
-                      fontWeight="bold"
-                      zIndex={4}
-                      boxShadow="lg"
-                    >
-                      <Flex align="center" gap={1}>
-                        <Icon as={FaStar} boxSize={3} />
-                        المستوى الحالي
-                      </Flex>
-                    </Box>
+                    <>
+                      <Box
+                        position="absolute"
+                        top={-2}
+                        right={-2}
+                        bg="green.500"
+                        color="white"
+                        borderRadius="full"
+                        px={2}
+                        py={1}
+                        fontSize="xs"
+                        fontWeight="bold"
+                        zIndex={4}
+                        boxShadow="lg"
+                      >
+                        <Flex align="center" gap={1}>
+                          <Icon as={FaStar} boxSize={3} />
+                          المستوى الحالي
+                        </Flex>
+                      </Box>
+                      {/* Current Level Label inside card */}
+                      <Box
+                        position="absolute"
+                        bottom={2}
+                        left={2}
+                        right={2}
+                        bg="green.500"
+                        color="white"
+                        borderRadius="md"
+                        px={2}
+                        py={1}
+                        fontSize="xs"
+                        fontWeight="bold"
+                        textAlign="center"
+                        zIndex={3}
+                        boxShadow="md"
+                      >
+                        المستوى الحالي: {item.vip}
+                      </Box>
+                    </>
                   )}
                   
-                  {/* Lock icon for locked cards */}
+                  {/* Lock overlay for locked cards */}
                   {!unlocked && (
-                    <Box
-                      position="absolute"
-                      top={2}
-                      right={2}
-                      bg="rgba(255,255,255,0.9)"
-                      borderRadius="full"
-                      p={1}
-                      zIndex={3}
-                      boxShadow="sm"
-                    >
-                      <Icon as={FaLock} color="gray.500" boxSize={4} />
-                    </Box>
+                    <>
+                      <Box
+                        position="absolute"
+                        top={2}
+                        right={2}
+                        bg="rgba(255,255,255,0.9)"
+                        borderRadius="full"
+                        p={1}
+                        zIndex={3}
+                        boxShadow="sm"
+                      >
+                        <Icon as={FaLock} color="gray.500" boxSize={4} />
+                      </Box>
+                      <Box
+                        position="absolute"
+                        inset={0}
+                        bg="rgba(0,0,0,0.1)"
+                        borderRadius="lg"
+                        zIndex={1}
+                      />
+                    </>
                   )}
                   
                   {/* Lock message for locked cards */}
@@ -318,6 +439,8 @@ const Home = React.memo(function Home() {
                       fontWeight="bold" 
                       fontSize="xs"
                       textAlign="center"
+                      zIndex={2}
+                      position="relative"
                     >
                       مغلق – يتطلب {formatUSDT(item.invest)}
                     </Text>
@@ -401,13 +524,13 @@ const Home = React.memo(function Home() {
       <style jsx global>{`
         @keyframes pulse {
           0% {
-            box-shadow: 0 0 20px rgba(72, 187, 120, 0.3);
+            box-shadow: 0 0 25px rgba(72, 187, 120, 0.4);
           }
           50% {
-            box-shadow: 0 0 25px rgba(72, 187, 120, 0.5);
+            box-shadow: 0 0 35px rgba(72, 187, 120, 0.6);
           }
           100% {
-            box-shadow: 0 0 20px rgba(72, 187, 120, 0.3);
+            box-shadow: 0 0 25px rgba(72, 187, 120, 0.4);
           }
         }
       `}</style>

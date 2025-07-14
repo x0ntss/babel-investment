@@ -22,8 +22,8 @@ export default async function handler(req, res) {
     const user = await User.findById(req.user._id).select('-password');
     
     if (user) {
-      // Calculate level and daily income based on balance
-      const { level, dailyIncomeMin, dailyIncomeMax, percentRange } = getLevelAndIncome(user.balance);
+      // Calculate level and daily income based on vipCapital
+      const { level, dailyIncomeMin, dailyIncomeMax, percentRange } = getLevelAndIncome(user.vipCapital);
       
       // Return user data with calculated fields
       res.json({

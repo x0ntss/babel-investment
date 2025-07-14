@@ -42,6 +42,13 @@ export default async function handler(req, res) {
     user.completedTasks = (user.completedTasks || 0) + 1;
     user.lastRewardDate = now;
     user.lastRewardAmount = bonusAmount;
+    // Add reward transaction
+    user.transactions.push({
+      type: 'reward',
+      amount: bonusAmount,
+      status: 'completed',
+      createdAt: now
+    });
     await user.save();
     
     res.json({

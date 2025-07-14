@@ -1,24 +1,136 @@
 "use client";
-import React from 'react';
-import { Box, Flex, Link, Heading, Button } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { 
+  Box, 
+  Flex, 
+  Link, 
+  Heading, 
+  Button, 
+  IconButton, 
+  Drawer, 
+  DrawerBody, 
+  DrawerHeader, 
+  DrawerOverlay, 
+  DrawerContent, 
+  DrawerCloseButton, 
+  VStack, 
+  useDisclosure,
+  Text,
+  HStack
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { componentStyles } from '../theme';
 
 const AdminNavbar = ({ onLogout }) => {
   const pathname = usePathname();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   
+  const navItems = [
+    { href: '/admin/dashboard', label: 'لوحة التحكم' },
+    { href: '/admin/users', label: 'المستخدمون' },
+    { href: '/admin/transactions', label: 'المعاملات' },
+    { href: '/admin/pages/Banners', label: 'الاعلانات' },
+  ];
+
+  const isActive = (href) => pathname === href;
+
+  const NavLink = ({ href, label, isMobile = false }) => (
+    <Link
+      as={NextLink}
+      href={href}
+      fontWeight={isActive(href) ? 'bold' : 'normal'}
+      color={isActive(href) ? 'teal.200' : 'white'}
+      _hover={{ color: 'teal.100' }}
+      px={isMobile ? 4 : 6}
+      py={isMobile ? 3 : 2}
+      borderRadius="md"
+      transition="all 0.2s"
+      display="block"
+      w={isMobile ? 'full' : 'auto'}
+      textAlign={isMobile ? 'left' : 'center'}
+    >
+      {label}
+    </Link>
+  );
+
   return (
-  <Box bg="gray.700" color="white" px={8} py={4}>
-    <Flex align="center" justify="space-between">
-      <Heading size="md">Admin Panel</Heading>
-      <Flex gap={6} align="center">
-        <Link as={NextLink} href="/admin/dashboard" fontWeight={pathname === '/admin/dashboard' ? 'bold' : 'normal'} color={pathname === '/admin/dashboard' ? 'teal.200' : 'white'}>Dashboard</Link>
-        <Link as={NextLink} href="/admin/users" fontWeight={pathname === '/admin/users' ? 'bold' : 'normal'} color={pathname === '/admin/users' ? 'teal.200' : 'white'}>Users</Link>
-        <Link as={NextLink} href="/admin/transactions" fontWeight={pathname === '/admin/transactions' ? 'bold' : 'normal'} color={pathname === '/admin/transactions' ? 'teal.200' : 'white'}>Transactions</Link>
-        <Button ml={8} colorScheme="red" size="sm" onClick={onLogout}>Logout</Button>
-      </Flex>
-    </Flex>
-  </Box>
+    <>
+      {/* Desktop Navigation */}
+      <Box 
+        {...componentStyles.adminNavbar}
+        display={{ base: 'none', md: 'block' }}
+      >
+        <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
+          <Heading size="md" color="white">لوحة تحكم الإدارة</Heading>
+          <Flex gap={6} align="center">
+            {navItems.map((item) => (
+              <NavLink key={item.href} href={item.href} label={item.label} />
+            ))}
+            <Button 
+              colorScheme="red" 
+              size="sm" 
+              onClick={onLogout}
+              {...componentStyles.adminButton}
+            >
+              تسجيل الخروج
+            </Button>
+          </Flex>
+        </Flex>
+      </Box>
+
+      {/* Mobile Navigation */}
+      <Box 
+        {...componentStyles.adminNavbar}
+        display={{ base: 'block', md: 'none' }}
+      >
+        <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
+          <Heading size="md" color="white">لوحة تحكم الإدارة</Heading>
+          <HStack spacing={2}>
+            <IconButton
+              icon={<HamburgerIcon />}
+              variant="ghost"
+              color="white"
+              onClick={onOpen}
+              aria-label="Open menu"
+              size="sm"
+            />
+          </HStack>
+        </Flex>
+      </Box>
+
+      {/* Mobile Drawer */}
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="xs">
+        <DrawerOverlay />
+        <DrawerContent bg="gray.800" color="white">
+          <DrawerCloseButton color="white" />
+          <DrawerHeader borderBottomWidth="1px" borderColor="gray.700">
+            <Text fontSize="lg" fontWeight="bold">لوحة تحكم الإدارة</Text>
+          </DrawerHeader>
+          <DrawerBody pt={6}>
+            <VStack spacing={4} align="stretch">
+              {navItems.map((item) => (
+                <NavLink key={item.href} href={item.href} label={item.label} isMobile={true} />
+              ))}
+              <Button 
+                colorScheme="red" 
+                size="sm" 
+                onClick={() => {
+                  onLogout();
+                  onClose();
+                }}
+                {...componentStyles.adminButton}
+                w="full"
+                mt={4}
+              >
+                تسجيل الخروج
+              </Button>
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 

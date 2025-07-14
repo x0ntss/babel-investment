@@ -65,7 +65,7 @@ export default function SignUpPage() {
           {emailError && <Text color="red.500" fontSize="sm">{emailError}</Text>}
           <Input placeholder="رقم الهاتف" value={phone} onChange={e => setPhone(e.target.value)} />
           <Input placeholder="كلمة المرور" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-          <Input placeholder="رمز الإحالة (اختياري)" value={referralCode} onChange={e => setReferralCode(e.target.value)} />
+          <Input placeholder="رمز الإحالة (اجباري)" value={referralCode} onChange={e => setReferralCode(e.target.value)} />
           <Button colorScheme="green" w="full" isLoading={loading} onClick={handleSignUp}>إنشاء حساب</Button>
         </Stack>
         <Text mt={4} textAlign="center">

@@ -12,6 +12,17 @@ export default async function handler(req, res) {
 
     const { username, email, phone, password, code } = req.body;
 
+    // Require referral code
+    if (!code) {
+      return res.status(400).json({ message: 'Referral code is required' });
+    }
+
+    // Validate referral code (must match an existing user's referralCode)
+    const referrer = await User.findOne({ referralCode: code });
+    if (!referrer) {
+      return res.status(400).json({ message: 'Invalid referral code' });
+    }
+
     // Check if user already exists
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
     if (userExists) {

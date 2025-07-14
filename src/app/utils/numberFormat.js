@@ -14,6 +14,11 @@ export const formatBalance = (value, maxDecimals = 2, minDecimals = 2) => {
   
   const num = Number(value);
   
+  // Handle very small numbers
+  if (Math.abs(num) < 0.01 && num !== 0) {
+    return num.toExponential(2);
+  }
+  
   // Convert to string with fixed decimals
   const formatted = num.toFixed(maxDecimals);
   
@@ -48,6 +53,21 @@ export const formatBalance = (value, maxDecimals = 2, minDecimals = 2) => {
  * @returns {string} Formatted number with USDT
  */
 export const formatUSDT = (value) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return '0.00 USDT';
+  }
+  
+  const num = Number(value);
+  
+  // For large numbers, use comma separators
+  if (num >= 1000) {
+    const formatted = num.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return `${formatted} USDT`;
+  }
+  
   return `${formatBalance(value)} USDT`;
 };
 

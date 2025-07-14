@@ -306,16 +306,38 @@ export default function Wallet() {
         </ModalContent>
       </Modal>
 
-      {/* Stats Grid */}
-      <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={6} mb={10}>
-        <GridItem bg="white" rounded="xl" p={{ base: 2, md: 6 }} textAlign="center" boxShadow="md" color="gray.800">
+      {/* Stats Cards - 2-Column Grid Layout */}
+      <Grid 
+        templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(2, 1fr)" }} 
+        gap={6} 
+        mb={10}
+        maxW="1200px"
+        mx="auto"
+      >
+        {/* Capital Card */}
+        <GridItem 
+          bg="white" 
+          rounded="xl" 
+          p={{ base: 4, md: 6 }} 
+          textAlign="center" 
+          boxShadow="md" 
+          color="gray.800"
+        >
           <Stat>
             <StatLabel fontSize="lg" mb={2}>رأس المال</StatLabel>
             <StatNumber fontSize="2xl" color="blue.600">{formatUSDT(user.balance)}</StatNumber>
           </Stat>
         </GridItem>
 
-        <GridItem bg="white" rounded="xl" p={{ base: 2, md: 6 }} textAlign="center" boxShadow="md" color="gray.800">
+        {/* Daily Income Card */}
+        <GridItem 
+          bg="white" 
+          rounded="xl" 
+          p={{ base: 4, md: 6 }} 
+          textAlign="center" 
+          boxShadow="md" 
+          color="gray.800"
+        >
           <Stat>
             <StatLabel fontSize="lg" mb={2}>الدخل اليومي المتوقع</StatLabel>
             <StatNumber fontSize="2xl" color="green.600">
@@ -325,34 +347,43 @@ export default function Wallet() {
           </Stat>
         </GridItem>
 
-        <GridItem bg="white" rounded="xl" p={{ base: 2, md: 6 }} textAlign="center" boxShadow="md" color="gray.800">
+        {/* Current Level Card */}
+        <GridItem 
+          bg="white" 
+          rounded="xl" 
+          p={{ base: 4, md: 6 }} 
+          textAlign="center" 
+          boxShadow="md" 
+          color="gray.800"
+        >
           <Stat>
             <StatLabel fontSize="lg" mb={2}>المستوى الحالي</StatLabel>
             <StatNumber fontSize="2xl" color="purple.600">{user.level ? `المستوى ${user.level}` : "-"}</StatNumber>
           </Stat>
         </GridItem>
+
+        {/* Maximum Withdrawal Card */}
+        {withdrawalConfig && (
+          <GridItem 
+            bg="white" 
+            rounded="xl" 
+            p={{ base: 4, md: 6 }} 
+            textAlign="center" 
+            boxShadow="md" 
+            color="gray.800"
+          >
+            <Stat>
+              <StatLabel fontSize="lg" mb={2}>الحد الأقصى للسحب المتاح</StatLabel>
+              <StatNumber fontSize="2xl" color="orange.600">
+                {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
+              </StatNumber>
+            </Stat>
+          </GridItem>
+        )}
       </Grid>
 
-      {/* Maximum Withdrawal Amount Display */}
-      {withdrawalConfig && (
-        <Box bg="white" rounded="xl" p={{ base: 4, md: 6 }} mb={8} maxW={{ base: '100%', md: '600px' }} mx="auto" boxShadow="md" color="gray.800">
-          <Flex direction="column" align="center" textAlign="center">
-            <Text fontSize="lg" fontWeight="bold" mb={2} color="orange.600">
-              الحد الأقصى للسحب المتاح
-            </Text>
-            <Text fontSize="2xl" fontWeight="bold" color="green.600" mb={2}>
-              {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              رأس المال المودع: {formatUSDT(withdrawalConfig.vipCapital)} | 
-              الرصيد الحالي: {formatUSDT(withdrawalConfig.currentBalance)}
-            </Text>
-            <Text fontSize="xs" color="gray.400" mt={1}>
-              يمكنك سحب الأرباح فقط 
-            </Text>
-          </Flex>
-        </Box>
-      )}
+      {/* Summary Card - Full Width */}
+   
 
       {/* Action Buttons */}
       <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6} mb={10} maxW={{ base: '100%', md: '600px' }} mx="auto">
@@ -379,10 +410,20 @@ export default function Wallet() {
             </Thead>
             <Tbody>
               {user.transactions && user.transactions.length > 0 ? (
-                user.transactions.slice().reverse().map((tx, idx) => (
+                user.transactions.slice().reverse()
+                  .filter(tx => tx.type !== 'reward')
+                  .map((tx, idx) => (
                   <Tr key={idx}>
                     <Td textAlign="center">{tx.createdAt ? new Date(tx.createdAt).toLocaleString() : "-"}</Td>
-                    <Td textAlign="center">{tx.type === "deposit" ? "إيداع" : "سحب"}</Td>
+                    <Td textAlign="center">{
+                      tx.type === "deposit"
+                        ? "إيداع"
+                        : tx.type === "withdrawal"
+                        ? "سحب"
+                        : tx.type === "reward"
+                        ? "مكافأة"
+                        : tx.type
+                    }</Td>
                     <Td textAlign="center">{tx.amount} USDT</Td>
                     <Td textAlign="center" color={tx.status === "completed" ? "green.500" : tx.status === "pending" ? "yellow.500" : "red.500"}>
                       {tx.status === "completed" ? "تم التأكيد" : tx.status === "pending" ? "قيد المعالجة" : "مرفوض"}

@@ -15,17 +15,17 @@ export const VIP_LEVELS = [
 ];
 
 /**
- * Calculate user's VIP level and daily income based on balance
- * @param {number} balance - User's current balance
+ * Calculate user's VIP level and daily income based on vipCapital
+ * @param {number} vipCapital - User's current VIP capital
  * @returns {object} Object containing level, dailyIncomeMin, dailyIncomeMax, and percentRange
  */
-export function getLevelAndIncome(balance) {
+export function getLevelAndIncome(vipCapital) {
   for (const lvl of VIP_LEVELS) {
-    if (balance >= lvl.min && balance <= lvl.max) {
+    if (vipCapital >= lvl.min && vipCapital <= lvl.max) {
       return {
         level: lvl.level,
-        dailyIncomeMin: (balance * lvl.percent[0]) / 100,
-        dailyIncomeMax: (balance * lvl.percent[1]) / 100,
+        dailyIncomeMin: (vipCapital * lvl.percent[0]) / 100,
+        dailyIncomeMax: (vipCapital * lvl.percent[1]) / 100,
         percentRange: lvl.percent,
       };
     }
@@ -44,12 +44,12 @@ export function getVipLevelName(level) {
 
 /**
  * Check if user has reached a specific VIP level
- * @param {number} balance - User's current balance
+ * @param {number} vipCapital - User's current VIP capital
  * @param {number} targetLevel - Target VIP level to check
  * @returns {boolean} True if user has reached or exceeded the target level
  */
-export function hasReachedLevel(balance, targetLevel) {
+export function hasReachedLevel(vipCapital, targetLevel) {
   const levelData = VIP_LEVELS.find(lvl => lvl.level === targetLevel);
   if (!levelData) return false;
-  return balance >= levelData.min;
+  return vipCapital >= levelData.min;
 } 

@@ -10,10 +10,16 @@ export default async function handler(req, res) {
   try {
     await dbConnect();
 
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
-    // Find user by email
-    const user = await User.findOne({ email });
+    // Find user by username, email, or phone using identifier
+    const user = await User.findOne({
+      $or: [
+        { email: identifier },
+        { username: identifier },
+        { phone: identifier }
+      ]
+    });
 
     if (user && (await user.matchPassword(password))) {
       // Generate JWT token
@@ -37,7 +43,7 @@ export default async function handler(req, res) {
         token,
       });
     } else {
-      res.status(401).json({ message: 'Invalid email or password' });
+      res.status(401).json({ message: 'Invalid credentials' });
     }
   } catch (error) {
     console.error('❌ Login API Error:', error);

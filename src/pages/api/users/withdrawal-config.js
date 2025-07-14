@@ -23,14 +23,18 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: 'User not found' });
     }
     
-    const vipCapital = user.vipCapital || 0;
-    const balance = user.balance || 0;
-    const maxWithdrawalAmount = Math.max(0, balance - vipCapital);
+    // Sum all completed reward transactions
+    const totalRewards = user.transactions
+      .filter(tx => tx.type === 'reward' && tx.status === 'completed')
+      .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+    // Optionally, subtract total withdrawn if you want to limit to unwithdrawn rewards only
+    // For now, just use totalRewards
+    const maxWithdrawalAmount = Math.max(0, totalRewards);
     
     res.json({
       maxWithdrawalAmount: Number(maxWithdrawalAmount.toFixed(2)),
-      currentBalance: Number(balance.toFixed(2)),
-      vipCapital: Number(vipCapital.toFixed(2)),
+      currentBalance: Number(user.balance.toFixed(2)),
+      vipCapital: Number(user.vipCapital.toFixed(2)),
       withdrawalTaxPercentage: 15, // 15% tax
       minWithdrawalAmount: 10, // Minimum withdrawal amount
     });
