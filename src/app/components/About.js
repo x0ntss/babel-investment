@@ -48,7 +48,7 @@ export default function About() {
         </Text>
 
         <Text fontSize="md" color="whiteAlpha.900">
-          تم تأسيس المنصة في <b style={{ color: "#ffd700" }}>يوليو 2024</b>، وهي مصممة لتوفير فرص ربحية عادلة
+          تم تأسيس المنصة في <b style={{ color: "#ffd700" }}>2025-7-15</b>، وهي مصممة لتوفير فرص ربحية عادلة
           لجميع المستخدمين حول العالم.
         </Text>
 
