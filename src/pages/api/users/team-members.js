@@ -2,6 +2,13 @@ import dbConnect from '../lib/db.js';
 import User from '../lib/User.js';
 import { protect } from '../lib/auth.js';
 
+// Helper function to mask username
+function maskUsername(username) {
+  if (!username) return '';
+  if (username.length <= 2) return username[0] + '*';
+  return username.slice(0, 2) + '*'.repeat(Math.max(0, username.length - 2));
+}
+
 // Helper function to mask email
 function maskEmail(email) {
   if (!email) return '';
@@ -30,17 +37,24 @@ export default async function handler(req, res) {
       });
     });
 
-    const user = await User.findById(req.user._id).populate('teamMembers', 'username email');
+    const user = await User.findById(req.user._id).populate('teamMembers', 'username email balance registrationDate');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     
+    console.log('User found:', user._id);
+    console.log('Team members array:', user.teamMembers);
+    console.log('Team members length:', user.teamMembers ? user.teamMembers.length : 0);
+    
     const team = (user.teamMembers || []).map(member => ({
-      fullName: member.username,
-      email: maskEmail(member.email),
       _id: member._id,
+      username: maskUsername(member.username),
+      email: maskEmail(member.email),
+      balance: member.balance || 0,
+      registrationDate: member.registrationDate,
     }));
     
+    console.log('Processed team data:', team);
     res.json(team);
   } catch (error) {
     console.error(error);

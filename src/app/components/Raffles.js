@@ -57,10 +57,10 @@ export default function Raffles() {
   return (
     <Box p={{ base: 4, md: 8 }} minH="100vh" maxW="600px" mx="auto">
       <Heading mb={6} fontSize={{ base: "2xl", md: "3xl" }} textAlign="center">
-        رابط السحب الخاص بك
+        رابط الاحالة الخاص بك
       </Heading>
       <Text mb={4} textAlign="center">
-        شارك هذا الرابط مع أصدقائك للمشاركة في السحب:
+        شارك هذا الرابط مع أصدقائك للحصول على مكافأة 10% على اول ايداع :
       </Text>
       <InputGroup size="md" mb={4}>
         <Input value={raffleUrl} isReadOnly fontSize="md" />
@@ -74,7 +74,7 @@ export default function Raffles() {
           />
         </InputRightElement>
       </InputGroup>
-      <Text mb={2} fontWeight="bold">رمز السحب الخاص بك:</Text>
+      <Text mb={2} fontWeight="bold">رمز الاحالة الخاص بك:</Text>
       <Input
         value={raffleCode}
         onChange={e => setRaffleCode(e.target.value)}

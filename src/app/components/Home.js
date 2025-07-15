@@ -142,6 +142,23 @@ const Home = React.memo(function Home() {
         flexDirection="column"
         justifyContent="center"
       >
+        {/* Logo at top for mobile */}
+        <Box display={{ base: "block", md: "none" }} mb={6}>
+          <OptimizedImage
+            src={logo}
+            alt="USDT"
+            width={200}
+            height={150}
+            priority={true}
+            style={{
+              width: '60%',
+              maxWidth: '200px',
+              height: 'auto',
+              margin: '0 auto',
+            }}
+          />
+        </Box>
+
         <Heading mb={4} fontSize={{ base: "2xl", md: "4xl" }}>
           مرحبًا بك في منصة بابل للاستثمار
         </Heading>
@@ -186,19 +203,22 @@ const Home = React.memo(function Home() {
               )}
           </VStack>
 
-          <OptimizedImage
-            src={logo}
-            alt="USDT"
-            width={300}
-            height={200}
-            priority={true}
-            style={{
-              width: '70%',
-              maxWidth: '300px',
-              height: 'auto',
-              margin: '0 auto',
-            }}
-          />
+          {/* Logo for desktop - hidden on mobile since it's now at top */}
+          <Box display={{ base: "none", md: "block" }}>
+            <OptimizedImage
+              src={logo}
+              alt="USDT"
+              width={300}
+              height={200}
+              priority={true}
+              style={{
+                width: '70%',
+                maxWidth: '300px',
+                height: 'auto',
+                margin: '0 auto',
+              }}
+            />
+          </Box>
         </Flex>
       </Box>
 
@@ -512,7 +532,7 @@ const Home = React.memo(function Home() {
           justify="center"
           spacing={6}
         >
-          <Link href="https://t.me/llnvestorshouse" target="_blank" rel="noopener noreferrer">
+          <Link href="https://t.me/babel_vip" target="_blank" rel="noopener noreferrer">
             تيليجرام
           </Link>
         </Stack>

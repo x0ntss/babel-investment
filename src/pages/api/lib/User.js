@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
   lastRewardAmount: { type: Number, default: 0 }, // Amount of last reward claimed
   walletAddress: { type: String, default: null },
   vipCapital: { type: Number, default: 0 }, // Frozen VIP investment amount
+  registrationDate: { type: Date, default: Date.now }, // Registration date
 });
 
 // Hash password before saving

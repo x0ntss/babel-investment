@@ -39,6 +39,10 @@ export default async function handler(req, res) {
     });
 
     if (user) {
+      // Add the new user to the referrer's teamMembers array
+      referrer.teamMembers.push(user._id);
+      await referrer.save();
+      
       // Generate JWT token
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: '30d',

@@ -32,6 +32,7 @@ export default async function handler(req, res) {
         dailyIncomeMin,
         dailyIncomeMax,
         percentRange,
+        registrationDate: user.registrationDate,
       });
     } else {
       res.status(404).json({ message: 'User not found' });

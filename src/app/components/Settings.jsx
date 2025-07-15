@@ -24,7 +24,7 @@ import {
   AiOutlineLogout,
   AiOutlineTeam,
 } from "react-icons/ai";
-import { FaTicketAlt, FaUserCircle, FaEnvelope, FaPhone, FaMoneyBillWave, FaTasks, FaKey, FaEthereum } from "react-icons/fa";
+import { FaTicketAlt, FaUserCircle, FaEnvelope, FaPhone, FaMoneyBillWave, FaTasks, FaKey, FaEthereum, FaCalendarAlt, FaShieldAlt, FaFileContract } from "react-icons/fa";
 import { getCurrentUser, getTeamMembers } from "../api";
 import { useAuth } from "../contexts/AuthContext";
 import { formatUSDT } from "../utils/numberFormat";
@@ -97,6 +97,18 @@ export default function Settings() {
       label: "رمز الاحالة (Raffles)",
       color: "orange.500",
       onClick: () => router.push("/raffles"),
+    },
+    {
+      icon: FaShieldAlt,
+      label: "الأمان والشفافية",
+      color: "green.500",
+      onClick: () => router.push("/security"),
+    },
+    {
+      icon: FaFileContract,
+      label: "سياسة الاستخدام",
+      color: "indigo.500",
+      onClick: () => router.push("/terms"),
     },
     {
       icon: AiOutlineLogout,
@@ -183,6 +195,10 @@ export default function Settings() {
               <Text fontWeight="medium" ml={2}><b>تاريخ آخر مهمة:</b></Text>
               <Text>{user.lastTaskDate ? new Date(user.lastTaskDate).toLocaleString() : <span style={{color:'#eee'}}>-</span>}</Text>
             </Flex>
+            <Flex align="center" mb={1} color="#fff" fontSize="md">
+              <FaCalendarAlt style={{ marginLeft: 6, color: '#d4af37' }} />
+              <Text><b>تاريخ التسجيل:</b> {user.registrationDate ? new Date(user.registrationDate).toISOString().slice(0, 10) : <span style={{color:'#eee'}}>-</span>}</Text>
+            </Flex>
           </Flex>
           <style>{`
             @keyframes spin {
@@ -193,7 +209,7 @@ export default function Settings() {
         </Box>
       ) : null}
 
-      <SimpleGrid columns={{ base: 2, md: 4 }} spacing={6}>
+      <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={6}>
         {settingsItems.map((item, idx) => (
           <Card
             as="button"
