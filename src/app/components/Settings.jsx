@@ -76,9 +76,15 @@ export default function Settings() {
   const settingsItems = [
     {
       icon: AiOutlineLock,
-      label: "الأمان",
+      label: "إعدادات الأمان",
       color: "blue.500",
       onClick: () => router.push("/security"),
+    },
+    {
+      icon: FaShieldAlt,
+      label: "الأمان والشفافية",
+      color: "green.500",
+      onClick: () => router.push("/security-info"),
     },
     {
       icon: AiOutlineQuestionCircle,
@@ -97,12 +103,6 @@ export default function Settings() {
       label: "رمز الاحالة (Raffles)",
       color: "orange.500",
       onClick: () => router.push("/raffles"),
-    },
-    {
-      icon: FaShieldAlt,
-      label: "الأمان والشفافية",
-      color: "green.500",
-      onClick: () => router.push("/security"),
     },
     {
       icon: FaFileContract,
