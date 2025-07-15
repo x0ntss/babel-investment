@@ -48,7 +48,7 @@ export default function AdminLayout({ children }) {
         router.replace('/admin');
       }
     }
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');

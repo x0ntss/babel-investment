@@ -12,18 +12,12 @@ import {
   Container,
   Flex,
   Badge,
-  Divider,
 } from "@chakra-ui/react";
 import {
-  AiOutlineSafety,
   AiOutlineEye,
-  AiOutlineFileText,
   AiOutlineTeam,
-  AiOutlineNotification,
-  AiOutlineWarning,
-  AiOutlineLink,
 } from "react-icons/ai";
-import { FaShieldAlt, FaLock, FaChartLine, FaUsers, FaBell, FaExclamationTriangle, FaTelegram } from "react-icons/fa";
+import { FaShieldAlt, FaLock, FaChartLine, FaBell, FaExclamationTriangle, FaTelegram } from "react-icons/fa";
 
 export default function SecurityPage() {
   const securityFeatures = [

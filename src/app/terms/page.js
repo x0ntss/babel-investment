@@ -9,7 +9,6 @@ import {
   Container,
   Card,
   CardBody,
-  Divider,
   List,
   ListItem,
   ListIcon,
@@ -17,17 +16,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import {
-  AiOutlineFileText,
   AiOutlineCheckCircle,
-  AiOutlineUser,
-  AiOutlineDollar,
-  AiOutlineWithdraw,
-  AiOutlineTeam,
-  AiOutlineTask,
-  AiOutlineLock,
-  AiOutlineStop,
-  AiOutlineEdit,
-  AiOutlineMessage,
 } from "react-icons/ai";
 import { FaFileContract, FaUserCheck, FaMoneyBillWave, FaHandshake, FaUsers, FaTasks, FaShieldAlt, FaBan, FaEdit, FaEnvelope } from "react-icons/fa";
 
