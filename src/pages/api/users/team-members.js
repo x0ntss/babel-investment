@@ -51,7 +51,7 @@ export default async function handler(req, res) {
       username: maskUsername(member.username),
       email: maskEmail(member.email),
       balance: member.balance || 0,
-      registrationDate: member.registrationDate,
+      registrationDate: member.registrationDateFormatted,
     }));
     
     console.log('Processed team data:', team);

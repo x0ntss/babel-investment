@@ -29,13 +29,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Create user
+    // Create user with registration date
     const user = await User.create({
       username,
       email,
       phone,
       password,
-      code
+      code,
+      registrationDate: new Date() // Store as Date object, will be formatted via virtual field
     });
 
     if (user) {
@@ -55,6 +56,7 @@ export default async function handler(req, res) {
         phone: user.phone,
         balance: user.balance,
         referralCode: user.referralCode,
+        registrationDate: user.registrationDateFormatted, // Use formatted date
         token,
       });
     } else {

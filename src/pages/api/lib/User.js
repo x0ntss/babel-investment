@@ -26,7 +26,10 @@ const userSchema = new mongoose.Schema({
   lastRewardAmount: { type: Number, default: 0 }, // Amount of last reward claimed
   walletAddress: { type: String, default: null },
   vipCapital: { type: Number, default: 0 }, // Frozen VIP investment amount
-  registrationDate: { type: Date, default: Date.now }, // Registration date
+  registrationDate: { 
+    type: Date, 
+    default: Date.now
+  }, // Registration date
 });
 
 // Hash password before saving
@@ -51,5 +54,14 @@ userSchema.pre('save', function(next) {
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// Virtual field for formatted registration date
+userSchema.virtual('registrationDateFormatted').get(function() {
+  return this.registrationDate ? this.registrationDate.toISOString().split('T')[0] : null;
+});
+
+// Ensure virtual fields are included when converting to JSON
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 export default mongoose.models.User || mongoose.model('User', userSchema); 
