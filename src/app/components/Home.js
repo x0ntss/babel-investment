@@ -16,8 +16,7 @@ import {
   ModalOverlay,
   ModalContent,
   ModalBody,
-  ModalCloseButton,
-  useDisclosure,
+  ModalCloseButton
 } from "@chakra-ui/react";
 import OptimizedImage from "./OptimizedImage";
 // Images are now served from public folder
