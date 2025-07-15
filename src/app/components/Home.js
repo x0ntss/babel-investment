@@ -138,10 +138,20 @@ const Home = React.memo(function Home() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    // Only show if not seen before
-    if (typeof window !== "undefined") {
-      const seen = localStorage.getItem("homepage_telegram_modal_seen");
-      if (!seen) {
+    if (typeof window !== "undefined" && typeof window.performance !== "undefined") {
+      let navType = null;
+      if (window.performance.getEntriesByType) {
+        const navEntries = window.performance.getEntriesByType("navigation");
+        if (navEntries && navEntries.length > 0) {
+          navType = navEntries[0].type;
+        }
+      }
+      // Fallback for older browsers
+      if (!navType && window.performance.navigation) {
+        navType = window.performance.navigation.type === 1 ? "reload" : "navigate";
+      }
+      // Show modal only on hard reload (type === 'reload')
+      if (navType === "reload") {
         setShowModal(true);
       }
     }
@@ -149,9 +159,6 @@ const Home = React.memo(function Home() {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("homepage_telegram_modal_seen", "1");
-    }
   };
 
   return (
@@ -160,7 +167,9 @@ const Home = React.memo(function Home() {
       <Modal isOpen={showModal} onClose={handleCloseModal} isCentered size={{ base: "xs", md: "md" }}>
         <ModalOverlay />
         <ModalContent p={0} borderRadius="lg" maxW={{ base: "90vw", md: "400px" }}>
-          <ModalCloseButton top={0} left={2} right="unset" fontSize="lg" onClick={handleCloseModal} />
+          <ModalCloseButton top={3} left={2} right="unset" fontSize="lg" onClick={handleCloseModal} />
+          {/* Add margin below the close button for spacing */}
+          <Box mt={8} />
           <ModalBody p={6} textAlign="center" display="flex" flexDirection="column" alignItems="center">
             <Box fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" mb={4} color="gray.800">
               تابع القناة الرسمية التابعة للمنصة لمعرفة آخر التحديثات والتطورات
