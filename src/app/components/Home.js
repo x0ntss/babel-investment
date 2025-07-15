@@ -167,7 +167,9 @@ const Home = React.memo(function Home() {
       <Modal isOpen={showModal} onClose={handleCloseModal} isCentered size={{ base: "xs", md: "md" }}>
         <ModalOverlay />
         <ModalContent p={0} borderRadius="lg" maxW={{ base: "90vw", md: "400px" }}>
-          <ModalCloseButton top={0} left={2} right="unset" fontSize="lg" onClick={handleCloseModal} />
+          <ModalCloseButton top={3} left={2} right="unset" fontSize="lg" onClick={handleCloseModal} />
+          {/* Add margin below the close button for spacing */}
+          <Box mt={8} />
           <ModalBody p={6} textAlign="center" display="flex" flexDirection="column" alignItems="center">
             <Box fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" mb={4} color="gray.800">
               تابع القناة الرسمية التابعة للمنصة لمعرفة آخر التحديثات والتطورات
