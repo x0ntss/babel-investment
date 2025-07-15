@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Box,
   Heading,
@@ -12,12 +12,6 @@ import {
   Badge,
   SimpleGrid,
   Icon,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
 } from "@chakra-ui/react";
 import OptimizedImage from "./OptimizedImage";
 // Images are now served from public folder
@@ -135,52 +129,8 @@ const Home = React.memo(function Home() {
     return formatRange(min, max);
   }
 
-  // Modal logic
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    // Only show if not seen before
-    if (typeof window !== "undefined") {
-      const seen = localStorage.getItem("homepage_telegram_modal_seen");
-      if (!seen) {
-        setShowModal(true);
-      }
-    }
-  }, []);
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("homepage_telegram_modal_seen", "1");
-    }
-  };
-
   return (
     <>
-      {/* Telegram Modal - only on first visit */}
-      <Modal isOpen={showModal} onClose={handleCloseModal} isCentered size={{ base: "xs", md: "md" }}>
-        <ModalOverlay />
-        <ModalContent p={0} borderRadius="lg" maxW={{ base: "90vw", md: "400px" }}>
-          <ModalCloseButton top={2} left={2} right="unset" fontSize="lg" onClick={handleCloseModal} />
-          <ModalBody p={6} textAlign="center" display="flex" flexDirection="column" alignItems="center">
-            <Box fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" mb={4} color="gray.800">
-              تابع القناة الرسمية التابعة للمنصة لمعرفة آخر التحديثات والتطورات
-            </Box>
-            <Button
-              as="a"
-              href="https://t.me/babel_vip"
-              target="_blank"
-              rel="noopener noreferrer"
-              colorScheme="telegram"
-              size="lg"
-              w="full"
-              mb={2}
-            >
-              t.me/babel_vip
-            </Button>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
       <TopBannerCarousel />
       {/* Section 1: المقدمة */}
       <Box
