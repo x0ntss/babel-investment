@@ -162,7 +162,7 @@ const Home = React.memo(function Home() {
         <ModalContent p={0} borderRadius="lg" maxW={{ base: "90vw", md: "400px" }}>
           <ModalCloseButton top={0} left={2} right="unset" fontSize="lg" onClick={handleCloseModal} />
           <ModalBody p={6} textAlign="center" display="flex" flexDirection="column" alignItems="center">
-            <Box fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" mb={4} color="gray.800">
+            <Box mt={2} fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" mb={4} color="gray.800">
               تابع القناة الرسمية التابعة للمنصة لمعرفة آخر التحديثات والتطورات
             </Box>
             <Button
