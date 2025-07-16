@@ -138,20 +138,12 @@ const Home = React.memo(function Home() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    // Only show if not seen before
-    if (typeof window !== "undefined") {
-      const seen = localStorage.getItem("homepage_telegram_modal_seen");
-      if (!seen) {
-        setShowModal(true);
-      }
-    }
+    // Always show modal on homepage visit
+    setShowModal(true);
   }, []);
 
   const handleCloseModal = () => {
     setShowModal(false);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("homepage_telegram_modal_seen", "1");
-    }
   };
 
   return (
