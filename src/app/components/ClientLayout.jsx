@@ -35,11 +35,11 @@ export default function ClientLayout({ children }) {
     <Box position="relative" minH="100vh">
       {isLoading && <PageLoader />}
       
-      {/* Combined Navbar - handles both mobile sidebar and desktop navbar */}
+      {/* Sticky Bottom Navbar - only after login and not on admin routes */}
       {user && !isAdminRoute && <Navbar />}
       
       <Box
-        pb={{ base: 0, md: user && !isAdminRoute ? "100px" : 0 }}
+        pb={user && !isAdminRoute ? { base: "80px", md: "90px" } : 0}
         minH="100vh"
         bg="transparent"
         position="relative"

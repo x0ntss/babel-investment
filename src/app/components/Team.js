@@ -2,195 +2,199 @@
 import React, { useEffect, useState } from "react";
 import { 
   Box, 
-  Heading, 
   Text, 
   VStack, 
   Spinner, 
   Alert, 
   AlertIcon, 
-  Button, 
   Center, 
-  Badge,
-  Card,
-  CardBody,
-  Flex,
-  Icon,
-  HStack,
+
+  HStack
 } from "@chakra-ui/react";
-import { getTeamMembers } from "../api";
-import { useRouter } from "next/navigation";
-import { FaUsers, FaUser, FaEnvelope, FaCalendarAlt, FaArrowLeft } from "react-icons/fa";
+import { getTeamReport } from "../api";
+import { FaUsers,  FaMoneyBillWave } from "react-icons/fa";
+import { useTheme } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 
 export default function Team() {
-  const [teamMembers, setTeamMembers] = useState(null);
+  const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const router = useRouter();
+  const theme = useTheme();
+
+  // Glowing animation for Web3 effect
+  const glow = keyframes`
+    0% { box-shadow: 0 0 8px ${theme.colors.brand?.neonBlue || '#00eaff'}; }
+    50% { box-shadow: 0 0 24px ${theme.colors.brand?.neonGreen || '#00ffb2'}; }
+    100% { box-shadow: 0 0 8px ${theme.colors.brand?.neonBlue || '#00eaff'}; }
+  `;
 
   useEffect(() => {
-    getTeamMembers()
-      .then(data => {
-        console.log('Team members API response:', data);
-        setTeamMembers(data);
-      })
-      .catch(err => {
-        console.error('Team members API error:', err);
-        setError(err.message || "Failed to fetch team members");
-      })
+    setLoading(true);
+    getTeamReport()
+      .then(setReport)
+      .catch((err) => setError(err.message || "حدث خطأ أثناء جلب البيانات"))
       .finally(() => setLoading(false));
   }, []);
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    return new Date(dateString).toISOString().slice(0, 10);
-  };
-
-  const formatBalance = (balance) => {
-    return `${balance || 0} USDT`;
-  };
-
   return (
-    <Box p={{ base: 4, md: 8 }} minH="100vh" maxW="1200px" mx="auto" mb={20}>
-      <Heading 
-        mb={8} 
-        fontSize={{ base: "3xl", md: "4xl" }} 
+    <Box
+      p={{ base: 2, md: 6 }}
+      minH="100vh"
+      maxW="480px"
+      mx="auto"
+      bg={{ base: theme.colors.brand?.glass || "#10131a", md: "transparent" }}
+      pt={4}
+    >
+      <Box
+        bgGradient="linear(90deg, brand.neonBlue, brand.neonGreen, brand.neonPurple)"
+        borderRadius="2xl"
+        px={4}
+        py={3}
+        mb={4}
+        boxShadow="0 4px 32px rgba(0, 212, 255, 0.25)"
         textAlign="center"
-        className="gradient-text"
-        fontWeight="extrabold"
-        letterSpacing="wider"
+        border="1.5px solid"
+        borderColor="brand.glassBorder"
       >
-        فريق العمل الخاص بك
-      </Heading>
-
-      <Button 
-        mb={8} 
-        colorScheme="blue" 
-        onClick={() => router.push("/settings")}
-        leftIcon={<FaArrowLeft />}
-        bg="brand.neonBlue"
-        color="white"
-        _hover={{
-          bg: "brand.neonBlue",
-          transform: "translateY(-2px)",
-          boxShadow: "0 8px 25px rgba(0, 212, 255, 0.4)",
-        }}
-        _active={{
-          transform: "translateY(0)",
-        }}
-        transition="all 0.3s ease"
-      >
-        العودة إلى الإعدادات
-      </Button>
+        <Text color="white" fontWeight="extrabold" fontSize="2xl" letterSpacing="wide" textShadow="0 0 12px #00eaff">
+          تقرير الفريق
+        </Text>
+      </Box>
 
       {loading ? (
         <Center my={12}>
           <Spinner size="xl" color="brand.neonBlue" thickness="4px" />
         </Center>
       ) : error ? (
-        <Alert 
-          status="error" 
-          my={8} 
-          bg="rgba(239, 68, 68, 0.1)"
-          border="1px solid"
-          borderColor="red.400"
-          borderRadius="xl"
-        >
-          <AlertIcon color="red.400" />
-          <Text color="red.400">{error}</Text>
+        <Alert status="error" my={8} borderRadius="xl">
+          <AlertIcon />
+          <Text>{error}</Text>
         </Alert>
-      ) : teamMembers && teamMembers.length === 0 ? (
-        <Box
-          bg="rgba(0, 0, 0, 0.6)"
-          backdropFilter="blur(20px)"
-          borderRadius="2xl"
-          border="1px solid"
-          borderColor="brand.glassBorder"
-          boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)"
-          p={8}
-          textAlign="center"
-        >
-          <VStack spacing={4}>
-            <Icon as={FaUsers} boxSize={12} color="gray.400" />
-            <Text color="gray.400" fontSize="lg">
-              لا يوجد أعضاء في فريقك بعد.
+      ) : report ? (
+        <VStack spacing={6} align="stretch">
+          {/* Total Team Balance */}
+          <Box
+            bg="brand.glass"
+            borderRadius="2xl"
+            boxShadow="0 8px 32px rgba(0, 212, 255, 0.18)"
+            px={4}
+            py={5}
+            textAlign="center"
+            mb={2}
+            border="1.5px solid"
+            borderColor="brand.glassBorder"
+            style={{ animation: `${glow} 2.5s infinite alternate` }}
+            position="relative"
+            _before={{
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '2px',
+              bgGradient: 'linear(90deg, brand.neonBlue, brand.neonGreen, brand.neonPurple)',
+              opacity: 0.8,
+            }}
+          >
+            <HStack justify="center" spacing={3} mb={2}>
+              <FaMoneyBillWave color={theme.colors.brand?.neonBlue || "#00BFAE"} size={32} style={{ filter: 'drop-shadow(0 0 8px #00eaff)' }} />
+              <Text fontWeight="extrabold" fontSize="3xl" color="brand.neonBlue" textShadow="0 0 16px #00eaff">
+                {report.totalTeamBalance} USDT
+              </Text>
+            </HStack>
+            <Text color="brand.neonGreen" fontSize="md" fontWeight="bold" letterSpacing="wide">
+              إجمالي رصيد الفريق
             </Text>
-          </VStack>
-        </Box>
-      ) : (
-        <VStack align="stretch" spacing={6}>
-          {teamMembers.map((tm, index) => (
-            <Card
-              key={tm._id}
-              bg="rgba(0, 0, 0, 0.6)"
-              backdropFilter="blur(20px)"
-              border="1px solid"
-              borderColor="rgba(255, 255, 255, 0.1)"
-              borderRadius="xl"
-              boxShadow="0 4px 20px rgba(0, 0, 0, 0.3)"
-              _hover={{ 
-                transform: "translateY(-4px)",
-                boxShadow: "0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 212, 255, 0.2)",
-                borderColor: "brand.neonBlue",
-              }}
-              transition="all 0.3s ease"
-              overflow="hidden"
-              position="relative"
-              _before={{
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '2px',
-                bg: `hsl(${index * 60}, 70%, 60%)`,
-                opacity: 0.8,
-              }}
-            >
-              <CardBody p={6}>
-                <Flex direction={{ base: "column", md: "row" }} justify="space-between" align={{ base: "start", md: "center" }}>
-                  <VStack align="start" spacing={3} flex={1}>
-                    <HStack spacing={3}>
-                      <Icon as={FaUser} color="brand.neonBlue" boxSize={5} />
-                      <Text fontWeight="bold" fontSize="xl" color="white">
-                        {tm.username}
-                      </Text>
+          </Box>
+
+          {/* Special Members with Deposits */}
+          <Box
+            bg="brand.glass"
+            borderRadius="2xl"
+            boxShadow="0 4px 20px rgba(0, 255, 127, 0.10)"
+            px={4}
+            py={4}
+            mb={2}
+            border="1.5px solid"
+            borderColor="brand.glassBorder"
+          >
+            <Text fontWeight="extrabold" color="brand.neonBlue" mb={3} fontSize="xl" letterSpacing="wide" textShadow="0 0 8px #00eaff">
+              الأعضاء المميزون (قاموا بالإيداع)
+            </Text>
+            {report.specialMembers.length === 0 ? (
+              <Text color="gray.400" textAlign="center">لا يوجد أعضاء مميزون.</Text>
+            ) : (
+              <VStack spacing={2} align="stretch">
+                {report.specialMembers.map((member) => (
+                  <Box key={member._id} bg="rgba(0,212,255,0.08)" borderRadius="md" px={3} py={2} boxShadow="0 0 8px #00eaff">
+                    <HStack justify="space-between" flexWrap="wrap">
+                      <VStack align="start" spacing={0} minW={0} flex={1}>
+                        <Text fontWeight="bold" color="brand.neonGreen" fontSize="md" noOfLines={1}>الاسم: {member.username}</Text>
+                        <Text color="brand.neonBlue" fontSize="sm" noOfLines={1}>راس المال: {member.balance} $</Text>
+                        <Text color="brand.neonPurple" fontSize="xs">تاريخ التسجيل: {member.registrationDate}</Text>
+                      </VStack>
                     </HStack>
-                    
-                    <HStack spacing={3}>
-                      <Icon as={FaEnvelope} color="brand.neonGreen" boxSize={4} />
-                      <Text color="gray.300" fontSize="md">
-                        {tm.email}
-                      </Text>
-                    </HStack>
-                    
-                    <HStack spacing={3}>
-                      <Icon as={FaCalendarAlt} color="brand.neonPurple" boxSize={4} />
-                      <Text color="gray.300" fontSize="md">
-                        تاريخ التسجيل: {formatDate(tm.registrationDate)}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                  
-                  <Badge
-                    colorScheme="green"
-                    variant="solid"
-                    px={4}
-                    py={2}
-                    borderRadius="full"
-                    fontSize="lg"
-                    fontWeight="bold"
-                    bg="linear-gradient(135deg, brand.neonGreen, brand.neonCyan)"
-                    color="black"
-                    boxShadow="0 0 15px rgba(0, 255, 127, 0.3)"
-                  >
-                    {formatBalance(tm.balance)}
-                  </Badge>
-                </Flex>
-              </CardBody>
-            </Card>
-          ))}
+                  </Box>
+                ))}
+              </VStack>
+            )}
+          </Box>
+
+          {/* Total Members */}
+          <Box
+            bg="brand.glass"
+            borderRadius="2xl"
+            boxShadow="0 4px 20px rgba(59,130,246,0.10)"
+            px={4}
+            py={4}
+            mb={2}
+            textAlign="center"
+            border="1.5px solid"
+            borderColor="brand.glassBorder"
+          >
+            <HStack justify="center" spacing={2} mb={1}>
+              <FaUsers color={theme.colors.brand?.neonPurple || "#8f5bff"} style={{ filter: 'drop-shadow(0 0 8px #8f5bff)' }} />
+              <Text fontWeight="extrabold" fontSize="2xl" color="brand.neonPurple" textShadow="0 0 8px #8f5bff">
+                {report.totalMembers}
+              </Text>
+            </HStack>
+            <Text color="brand.neonBlue" fontSize="md" fontWeight="bold">إجمالي عدد الأعضاء</Text>
+          </Box>
+
+          {/* Regular Members (No Deposit) */}
+          <Box
+            bg="brand.glass"
+            borderRadius="2xl"
+            boxShadow="0 4px 20px rgba(160,174,192,0.10)"
+            px={4}
+            py={4}
+            mb={2}
+            border="1.5px solid"
+            borderColor="brand.glassBorder"
+          >
+            <Text fontWeight="extrabold" color="brand.neonPurple" mb={3} fontSize="xl" letterSpacing="wide" textShadow="0 0 8px #8f5bff">
+              الأعضاء العاديون (لم يودعوا)
+            </Text>
+            {report.regularMembers.length === 0 ? (
+              <Text color="gray.400" textAlign="center">لا يوجد أعضاء عاديون.</Text>
+            ) : (
+              <VStack spacing={2} align="stretch">
+                {report.regularMembers.map((member) => (
+                  <Box key={member._id} bg="rgba(143,91,255,0.08)" borderRadius="md" px={3} py={2}
+                    display="flex" flexDirection={{ base: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ base: 'flex-start', sm: 'center' }}>
+                    <VStack align="start" spacing={0} minW={0} flex={1}>
+                      <Text fontWeight="bold" color="brand.neonPurple" fontSize="md" noOfLines={1}>الاسم: {member.username}</Text>
+                      <Text color="brand.neonBlue" fontSize="sm" noOfLines={1}>راس المال: {member.balance} $</Text>
+                      <Text color="brand.neonPurple" fontSize="xs">تاريخ التسجيل: {member.registrationDate}</Text>
+                    </VStack>
+                  </Box>
+                ))}
+              </VStack>
+            )}
+          </Box>
         </VStack>
-      )}
+      ) : null}
     </Box>
   );
 }

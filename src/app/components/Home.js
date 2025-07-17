@@ -34,7 +34,11 @@ const Home = React.memo(function Home() {
   useEffect(() => {
     // Always show modal on homepage visit
     setShowModal(true);
-  }, []);
+    // Redirect logged-in users to /account
+    if (user) {
+      router.replace("/account");
+    }
+  }, [user, router]);
 
   const handleCloseModal = () => {
     setShowModal(false);

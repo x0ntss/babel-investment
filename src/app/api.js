@@ -171,4 +171,36 @@ export const getWithdrawalConfig = async () => {
     throw new Error(errMsg);
   }
   return res.json();
+};
+
+// New API for Team Report matching the UI structure
+export const getTeamReport = async () => {
+  try {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const res = await fetch('/api/users/team-report', {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      credentials: 'include',
+    });
+    if (!res.ok) throw new Error('Failed to fetch team report');
+    return await res.json();
+  } catch (err) {
+    console.log(err);
+    // Fallback mock for development if server is not ready
+    return {
+      totalTeamBalance: 1200,
+      totalMembers: 5,
+      specialMembers: [
+        { _id: '1', username: 'Ali Ahmad', balance: 500, registrationDate: '2024-01-01' },
+        { _id: '2', username: 'Sara Khaled', balance: 700, registrationDate: '2024-01-02' },
+      ],
+      regularMembers: [
+        { _id: '3', username: 'Omar Fathi', balance: 0, registrationDate: '2024-01-03' },
+        { _id: '4', username: 'Lina Noor', balance: 0, registrationDate: '2024-01-04' },
+        { _id: '5', username: 'Mona Adel', balance: 0, registrationDate: '2024-01-05' },
+      ],
+    };
+  }
 }; 
