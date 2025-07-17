@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const login = (userData) => setUser(userData);
   const logout = () => setUser(null);
@@ -13,18 +14,44 @@ export const AuthProvider = ({ children }) => {
   // Refresh user info from backend
   const refreshUser = async () => {
     try {
+      setLoading(true);
       const freshUser = await getCurrentUser();
       setUser(freshUser);
       return freshUser;
-    } catch {
-      // Optionally handle error
+    } catch (error) {
+      console.error("Error refreshing user:", error);
       return null;
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
+    const initializeAuth = async () => {
+      try {
+        setLoading(true);
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+          
+          // Optionally refresh user data from server
+          try {
+            const freshUser = await getCurrentUser();
+            setUser(freshUser);
+          } catch (error) {
+            console.error("Failed to refresh user data:", error);
+            // Keep the saved user data if refresh fails
+          }
+        }
+      } catch (error) {
+        console.error("Error initializing auth:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   useEffect(() => {
@@ -36,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

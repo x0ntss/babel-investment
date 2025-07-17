@@ -246,12 +246,12 @@ export default function Wallet() {
     }
   };
 
-  if (loading) return <Center minH="60vh"><Spinner /></Center>;
-  if (error) return <Center minH="60vh"><Text color="red.500">{error}</Text></Center>;
+  if (loading) return <Center minH="60vh"><Spinner color="brand.neonBlue" size="xl" /></Center>;
+  if (error) return <Center minH="60vh"><Text color="brand.error">{error}</Text></Center>;
 
   return (
     <Box p={{ base: 4, md: 8 }} minH="100vh">
-      <Heading mb={4} textAlign="center" fontSize={{ base: "2xl", md: "3xl" }}>
+      <Heading mb={4} textAlign="center" fontSize={{ base: "2xl", md: "3xl" }} className="gradient-text">
         لوحة تحكم المحفظة
       </Heading>
 
@@ -260,16 +260,16 @@ export default function Wallet() {
       </Text>
 
       {/* Wallet Address Section */}
-      <Box bg="white" rounded="xl" p={{ base: 2, md: 6 }} mb={8} maxW={{ base: '100%', md: '600px' }} mx="auto" boxShadow="md" color="gray.800">
+      <Box bg="brand.glass" rounded="xl" p={{ base: 2, md: 6 }} mb={8} maxW={{ base: '100%', md: '600px' }} mx="auto" boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)" border="1px solid" borderColor="brand.glassBorder">
         <Flex align="center" justify="space-between">
           <Box>
-            <Text fontWeight="bold" fontSize="lg" mb={1}>عنوان المحفظة المرتبط:</Text>
-            <Text fontSize="md" color={user.walletAddress ? "green.600" : "gray.500"} wordBreak="break-all">
+            <Text fontWeight="bold" fontSize="lg" mb={1} color="white">عنوان المحفظة المرتبط:</Text>
+            <Text fontSize="md" color={user.walletAddress ? "brand.neonGreen" : "gray.400"} wordBreak="break-all">
               {user.walletAddress || "لم يتم ربط عنوان بعد"}
             </Text>
           </Box>
           {!user.walletAddress && (
-            <Button colorScheme="teal" onClick={() => { setWalletInput(""); setWalletModalOpen(true); }}>
+            <Button variant="neon" onClick={() => { setWalletInput(""); setWalletModalOpen(true); }}>
               إضافة عنوان
             </Button>
           )}
@@ -316,65 +316,73 @@ export default function Wallet() {
       >
         {/* Capital Card */}
         <GridItem 
-          bg="white" 
+          bg="brand.glass" 
           rounded="xl" 
           p={{ base: 4, md: 6 }} 
           textAlign="center" 
-          boxShadow="md" 
-          color="gray.800"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)" 
+          border="1px solid"
+          borderColor="brand.glassBorder"
+          className="glow"
         >
           <Stat>
-            <StatLabel fontSize="lg" mb={2}>رأس المال</StatLabel>
-            <StatNumber fontSize="2xl" color="blue.600">{formatUSDT(user.balance)}</StatNumber>
+            <StatLabel fontSize="lg" mb={2} color="white">رأس المال</StatLabel>
+            <StatNumber fontSize="2xl" color="brand.neonBlue">{formatUSDT(user.balance)}</StatNumber>
           </Stat>
         </GridItem>
 
         {/* Daily Income Card */}
         <GridItem 
-          bg="white" 
+          bg="brand.glass" 
           rounded="xl" 
           p={{ base: 4, md: 6 }} 
           textAlign="center" 
-          boxShadow="md" 
-          color="gray.800"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)" 
+          border="1px solid"
+          borderColor="brand.glassBorder"
+          className="glow"
         >
           <Stat>
-            <StatLabel fontSize="lg" mb={2}>الدخل اليومي المتوقع</StatLabel>
-            <StatNumber fontSize="2xl" color="green.600">
+            <StatLabel fontSize="lg" mb={2} color="white">الدخل اليومي المتوقع</StatLabel>
+            <StatNumber fontSize="2xl" color="brand.neonGreen">
               {formatRange(user.dailyIncomeMin, user.dailyIncomeMax)}
             </StatNumber>
-            <Text fontSize="sm" color="gray.500">({user.percentRange ? `${user.percentRange[0]}% - ${user.percentRange[1]}%` : "-"})</Text>
+            <Text fontSize="sm" color="gray.300">({user.percentRange ? `${user.percentRange[0]}% - ${user.percentRange[1]}%` : "-"})</Text>
           </Stat>
         </GridItem>
 
         {/* Current Level Card */}
         <GridItem 
-          bg="white" 
+          bg="brand.glass" 
           rounded="xl" 
           p={{ base: 4, md: 6 }} 
           textAlign="center" 
-          boxShadow="md" 
-          color="gray.800"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)" 
+          border="1px solid"
+          borderColor="brand.glassBorder"
+          className="glow"
         >
           <Stat>
-            <StatLabel fontSize="lg" mb={2}>المستوى الحالي</StatLabel>
-            <StatNumber fontSize="2xl" color="purple.600">{user.level ? `المستوى ${user.level}` : "-"}</StatNumber>
+            <StatLabel fontSize="lg" mb={2} color="white">المستوى الحالي</StatLabel>
+            <StatNumber fontSize="2xl" color="brand.neonPurple">{user.level ? `المستوى ${user.level}` : "-"}</StatNumber>
           </Stat>
         </GridItem>
 
         {/* Maximum Withdrawal Card */}
         {withdrawalConfig && (
           <GridItem 
-            bg="white" 
+            bg="brand.glass" 
             rounded="xl" 
             p={{ base: 4, md: 6 }} 
             textAlign="center" 
-            boxShadow="md" 
-            color="gray.800"
+            boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)" 
+            border="1px solid"
+            borderColor="brand.glassBorder"
+            className="glow"
           >
             <Stat>
-              <StatLabel fontSize="lg" mb={2}>الحد الأقصى للسحب المتاح</StatLabel>
-              <StatNumber fontSize="2xl" color="orange.600">
+              <StatLabel fontSize="lg" mb={2} color="white">الحد الأقصى للسحب المتاح</StatLabel>
+              <StatNumber fontSize="2xl" color="brand.warning">
                 {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
               </StatNumber>
             </Stat>
@@ -387,25 +395,25 @@ export default function Wallet() {
 
       {/* Action Buttons */}
       <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6} mb={10} maxW={{ base: '100%', md: '600px' }} mx="auto">
-        <Button colorScheme="blue" size="lg" w="100%" onClick={depositDisclosure.onOpen} boxShadow="md">
+        <Button variant="solid" size="lg" w="100%" onClick={depositDisclosure.onOpen} className="glow">
           إيداع
         </Button>
-        <Button colorScheme="red" size="lg" w="100%" boxShadow="md" onClick={withdrawDisclosure.onOpen}>
+        <Button variant="outline" colorScheme="red" size="lg" w="100%" onClick={withdrawDisclosure.onOpen} className="glow">
           سحب
         </Button>
       </Grid>
 
       {/* Transactions Table */}
-      <Box bg="white" mb={16} rounded="xl" p={{ base: 2, md: 6 }} w="100%" maxW={{ base: '100%', md: '1000px' }} mx="auto" boxShadow="md" color="gray.800">
-        <Heading fontSize="xl" mb={4} textAlign="center">سجل السحوبات والإيداعات</Heading>
+      <Box bg="brand.glass" mb={16} rounded="xl" p={{ base: 2, md: 6 }} w="100%" maxW={{ base: '100%', md: '1000px' }} mx="auto" boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)" border="1px solid" borderColor="brand.glassBorder">
+        <Heading fontSize="xl" mb={4} textAlign="center" color="white">سجل السحوبات والإيداعات</Heading>
         <Box overflowX="auto">
           <Table variant="simple" size="md" minW="350px">
-            <Thead bg="gray.100">
+            <Thead bg="rgba(255, 255, 255, 0.1)">
               <Tr>
-                <Th textAlign="center">التاريخ</Th>
-                <Th textAlign="center">النوع</Th>
-                <Th textAlign="center">القيمة</Th>
-                <Th textAlign="center">الحالة</Th>
+                <Th textAlign="center" color="white">التاريخ</Th>
+                <Th textAlign="center" color="white">النوع</Th>
+                <Th textAlign="center" color="white">القيمة</Th>
+                <Th textAlign="center" color="white">الحالة</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -413,9 +421,9 @@ export default function Wallet() {
                 user.transactions.slice().reverse()
                   .filter(tx => tx.type !== 'reward')
                   .map((tx, idx) => (
-                  <Tr key={idx}>
-                    <Td textAlign="center">{tx.createdAt ? new Date(tx.createdAt).toLocaleString() : "-"}</Td>
-                    <Td textAlign="center">{
+                  <Tr key={idx} _hover={{ bg: "rgba(255, 255, 255, 0.05)" }}>
+                    <Td textAlign="center" color="white">{tx.createdAt ? new Date(tx.createdAt).toLocaleString() : "-"}</Td>
+                    <Td textAlign="center" color="white">{
                       tx.type === "deposit"
                         ? "إيداع"
                         : tx.type === "withdrawal"
@@ -424,15 +432,15 @@ export default function Wallet() {
                         ? "مكافأة"
                         : tx.type
                     }</Td>
-                    <Td textAlign="center">{tx.amount} USDT</Td>
-                    <Td textAlign="center" color={tx.status === "completed" ? "green.500" : tx.status === "pending" ? "yellow.500" : "red.500"}>
+                    <Td textAlign="center" color="white">{tx.amount} USDT</Td>
+                    <Td textAlign="center" color={tx.status === "completed" ? "brand.neonGreen" : tx.status === "pending" ? "brand.warning" : "brand.error"}>
                       {tx.status === "completed" ? "تم التأكيد" : tx.status === "pending" ? "قيد المعالجة" : "مرفوض"}
                     </Td>
               </Tr>
                 ))
               ) : (
               <Tr>
-                  <Td colSpan={4} textAlign="center">لا توجد معاملات بعد.</Td>
+                  <Td colSpan={4} textAlign="center" color="gray.400">لا توجد معاملات بعد.</Td>
               </Tr>
               )}
             </Tbody>
@@ -442,99 +450,213 @@ export default function Wallet() {
 
       {/* Modal for Deposit */}
       <Modal isOpen={depositDisclosure.isOpen} onClose={depositDisclosure.onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent bg="white" color="gray.800">
-          <ModalHeader textAlign="center">إيداع الأموال</ModalHeader>
-          <ModalCloseButton />
+        <ModalOverlay bg="rgba(0,0,0,0.7)" backdropFilter="blur(10px)" />
+        <ModalContent
+          bg="brand.glass"
+          color="white"
+          border="1px solid"
+          borderColor="brand.glassBorder"
+          boxShadow="0 25px 50px rgba(0,0,0,0.7)"
+          backdropFilter="blur(20px)"
+          maxW={{ base: '95vw', md: '500px' }}
+          className="glow"
+        >
+          <ModalHeader textAlign="center" fontSize="xl" fontWeight="bold" className="gradient-text">
+            إيداع الأموال
+          </ModalHeader>
+          <ModalCloseButton color="white" _hover={{ color: 'brand.neonBlue' }} />
           <ModalBody>
-            <Text mb={2}><b>الشبكة:</b> TRC20</Text>
-
-            <Flex justify="center" align="center" mb={4}>
-              <OptimizedImage src={trxLogo} alt="TRX Logo" width={50} height={50} style={{ marginRight: '16px' }} />
-              <OptimizedImage src={qrImage} alt="QR Code" width={120} height={120} />
-            </Flex>
-
-            <Text mb={2}>يرجى إرسال الإيداع إلى عنوان المحفظة التالي:</Text>
-            <Box bg="gray.100" color="black" p={4} rounded="md" fontWeight="bold" mb={4} textAlign="center" fontSize="sm" wordBreak="break-all">
-            TACjVq51U2rmQ1uoPQoe2SnxDbBkDD5BRY
+            <Box
+              bg="rgba(0,123,255,0.08)"
+              border="1px solid"
+              borderColor="brand.neonBlue"
+              rounded="lg"
+              p={3}
+              mb={4}
+              textAlign="center"
+            >
+              <Text fontWeight="bold" color="brand.neonBlue" fontSize="lg">الشبكة: TRC20</Text>
             </Box>
-
-            <Text mb={2}>أدخل مبلغ الإيداع (USDT):</Text>
-            <Input placeholder="مثال: 150" type="number" min={1} mb={4} bg="white" value={depositAmount} onChange={e => setDepositAmount(e.target.value)} />
-
-            <Text mb={2}>ارفع صورة دليل الإيداع:</Text>
-            <Input type="file" accept="image/*" onChange={(e) => setDepositProof(e.target.files[0])} bg="white" />
+            <Flex justify="center" align="center" mb={6}>
+              <Box
+                bg="rgba(255,255,255,0.08)"
+                p={3}
+                rounded="xl"
+                border="1px solid"
+                borderColor="brand.glassBorder"
+                mr={4}
+              >
+                <OptimizedImage src={trxLogo} alt="TRX Logo" width={50} />
+              </Box>
+              <Box
+                bg="white"
+                p={3}
+                rounded="xl"
+                border="1px solid"
+                borderColor="brand.glassBorder"
+                boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+              >
+                <OptimizedImage src={qrImage} alt="QR Code" width={120} height={120} />
+              </Box>
+            </Flex>
+            <Text mb={3} fontSize="md" color="gray.300">يرجى إرسال الإيداع إلى عنوان المحفظة التالي:</Text>
+            <Box
+              bg="rgba(0,255,0,0.08)"
+              border="1px solid"
+              borderColor="brand.neonGreen"
+              color="brand.neonGreen"
+              p={4}
+              rounded="lg"
+              fontWeight="bold"
+              mb={6}
+              textAlign="center"
+              fontSize="sm"
+              wordBreak="break-all"
+              className="glow"
+            >
+              TACjVq51U2rmQ1uoPQoe2SnxDbBkDD5BRY
+            </Box>
+            <Text mb={3} fontSize="md" color="gray.300">أدخل مبلغ الإيداع (USDT):</Text>
+            <Input
+              placeholder="مثال: 150"
+              type="number"
+              min={1}
+              mb={6}
+              bg="rgba(255,255,255,0.08)"
+              border="1px solid"
+              borderColor="brand.glassBorder"
+              color="white"
+              _placeholder={{ color: 'gray.400' }}
+              _focus={{ borderColor: 'brand.neonBlue', boxShadow: '0 0 0 1px var(--chakra-colors-brand-neonBlue)', bg: 'rgba(255,255,255,0.15)' }}
+              value={depositAmount}
+              onChange={e => setDepositAmount(e.target.value)}
+            />
+            <Text mb={3} fontSize="md" color="gray.300">ارفع صورة دليل الإيداع:</Text>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setDepositProof(e.target.files[0])}
+              bg="rgba(255,255,255,0.08)"
+              border="1px solid"
+              borderColor="brand.glassBorder"
+              color="white"
+              _focus={{ borderColor: 'brand.neonBlue', boxShadow: '0 0 0 1px var(--chakra-colors-brand-neonBlue)', bg: 'rgba(255,255,255,0.15)' }}
+              sx={{
+                '::file-selector-button': {
+                  background: 'var(--chakra-colors-brand-neonBlue)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '8px 16px',
+                  marginRight: '12px',
+                  cursor: 'pointer',
+                }
+              }}
+            />
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" w="100%" onClick={handleSendDeposit} isLoading={actionLoading}>إرسال الإيداع</Button>
+            <Button
+              variant="neon"
+              w="100%"
+              size="lg"
+              onClick={handleSendDeposit}
+              isLoading={actionLoading}
+              className="glow"
+            >
+              إرسال الإيداع
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-
       {/* Modal for Withdraw */}
       <Modal isOpen={withdrawDisclosure.isOpen} onClose={withdrawDisclosure.onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent bg="white" color="gray.800">
-          <ModalHeader textAlign="center">طلب سحب الأموال</ModalHeader>
-          <ModalCloseButton />
+        <ModalOverlay bg="rgba(0,0,0,0.7)" backdropFilter="blur(10px)" />
+        <ModalContent
+          bg="brand.glass"
+          color="white"
+          border="1px solid"
+          borderColor="brand.glassBorder"
+          boxShadow="0 25px 50px rgba(0,0,0,0.7)"
+          backdropFilter="blur(20px)"
+          maxW={{ base: '95vw', md: '500px' }}
+          className="glow"
+        >
+          <ModalHeader textAlign="center" fontSize="xl" fontWeight="bold" className="gradient-text">
+            طلب سحب الأموال
+          </ModalHeader>
+          <ModalCloseButton color="white" _hover={{ color: 'brand.neonBlue' }} />
           <ModalBody>
-            {/* Maximum Withdrawal Amount Display */}
             {withdrawalConfig && (
-              <Box bg="orange.50" rounded="md" p={4} mb={4} border="1px" borderColor="orange.200">
-                <Text fontSize="sm" fontWeight="bold" color="orange.700" mb={2} textAlign="center">
+              <Box bg="rgba(255,165,0,0.08)" rounded="md" p={4} mb={4} border="1px solid" borderColor="brand.neonBlue">
+                <Text fontSize="sm" fontWeight="bold" color="brand.neonBlue" mb={2} textAlign="center">
                   الحد الأقصى للسحب المتاح
                 </Text>
-                <Text fontSize="lg" fontWeight="bold" color="green.600" textAlign="center" mb={2}>
+                <Text fontSize="lg" fontWeight="bold" color="brand.neonGreen" textAlign="center" mb={2}>
                   {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
                 </Text>
-                <Text fontSize="xs" color="gray.600" textAlign="center">
-                  رأس المال المودع: {formatUSDT(withdrawalConfig.vipCapital)} | 
-                  الرصيد الحالي: {formatUSDT(withdrawalConfig.currentBalance)}
+                <Text fontSize="xs" color="gray.300" textAlign="center">
+                  رأس المال المودع: {formatUSDT(withdrawalConfig.vipCapital)} | الرصيد الحالي: {formatUSDT(withdrawalConfig.currentBalance)}
                 </Text>
               </Box>
             )}
-
-            <Text mb={2}>أدخل المبلغ المراد سحبه (USDT):</Text>
-            <Input placeholder="مثال: 150" type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} mb={2} bg="white" />
+            <Text mb={3} fontSize="md" color="gray.300">أدخل المبلغ المراد سحبه (USDT):</Text>
+            <Input
+              placeholder="مثال: 150"
+              type="number"
+              value={withdrawAmount}
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              mb={2}
+              bg="rgba(255,255,255,0.08)"
+              border="1px solid"
+              borderColor="brand.glassBorder"
+              color="white"
+              _placeholder={{ color: 'gray.400' }}
+              _focus={{ borderColor: 'brand.neonBlue', boxShadow: '0 0 0 1px var(--chakra-colors-brand-neonBlue)', bg: 'rgba(255,255,255,0.15)' }}
+            />
             {withdrawalConfig && (
               <Text fontSize="xs" color="gray.500" mb={4} textAlign="center">
                 الحد الأقصى: {formatUSDT(withdrawalConfig.maxWithdrawalAmount)}
               </Text>
             )}
-            {/* Tax and net amount label */}
             {withdrawAmount && !isNaN(Number(withdrawAmount)) && Number(withdrawAmount) > 0 && (
               <Box mb={2} textAlign="center">
-                <Text color="orange.500" fontSize="md">
-                  الضريبة (15%): { formatUSDT(Number(withdrawAmount) * 0.15) }
+                <Text color="orange.400" fontSize="md">
+                  الضريبة (15%): {formatUSDT(Number(withdrawAmount) * 0.15)}
                 </Text>
-                <Text color="green.600" fontSize="md">
-                  صافي المبلغ بعد الضريبة: { formatUSDT(Number(withdrawAmount) * 0.85) }
+                <Text color="brand.neonGreen" fontSize="md">
+                  صافي المبلغ بعد الضريبة: {formatUSDT(Number(withdrawAmount) * 0.85)}
                 </Text>
               </Box>
             )}
-            <Text mb={2}>عنوان محفظة TRON (TRC20):</Text>
+            <Text mb={3} fontSize="md" color="gray.300">عنوان محفظة TRON (TRC20):</Text>
             <Input
               value={withdrawAddress || ""}
               isReadOnly
               mb={4}
-              bg="gray.100"
-              color={validateWallet(withdrawAddress) ? "green.600" : "red.500"}
+              bg="rgba(255,255,255,0.08)"
+              color={validateWallet(withdrawAddress) ? 'brand.neonGreen' : 'red.500'}
+              border="1px solid"
+              borderColor="brand.glassBorder"
+              _placeholder={{ color: 'gray.400' }}
+              _focus={{ borderColor: 'brand.neonBlue', boxShadow: '0 0 0 1px var(--chakra-colors-brand-neonBlue)', bg: 'rgba(255,255,255,0.15)' }}
               placeholder="يرجى إضافة عنوان محفظة TRON أولاً"
             />
             {!validateWallet(withdrawAddress) && (
               <Box textAlign="center" mb={2}>
                 <Text color="red.500" fontSize="sm" mb={2}>يرجى إضافة عنوان محفظة TRON (TRC20) صالح قبل السحب.</Text>
-                <Button colorScheme="teal" size="sm" onClick={() => { setWalletInput(user.walletAddress || ""); setWalletModalOpen(true); withdrawDisclosure.onClose(); }}>إضافة عنوان المحفظة</Button>
+                <Button variant="neon" size="sm" className="glow" onClick={() => { setWalletInput(user.walletAddress || ""); setWalletModalOpen(true); withdrawDisclosure.onClose(); }}>إضافة عنوان المحفظة</Button>
               </Box>
             )}
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="red"
+              variant="neon"
               w="100%"
+              size="lg"
               onClick={handleSendWithdraw}
               isLoading={actionLoading}
               isDisabled={!validateWallet(withdrawAddress)}
+              className="glow"
             >
               إرسال طلب السحب
             </Button>

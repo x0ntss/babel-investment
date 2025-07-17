@@ -25,43 +25,43 @@ export default function SecurityInfoPage() {
       icon: AiOutlineEye,
       title: "وضوح كامل في أنظمة الاستثمار",
       description: "جميع تفاصيل الاشتراكات، شروط المشاريع، ونظام السحب مذكورة بوضوح دون أي خداع أو تلاعب.",
-      color: "blue.500",
-      bgColor: "blue.50",
+      color: "brand.neonBlue",
+      bgColor: "rgba(0, 212, 255, 0.05)",
     },
     {
       icon: FaLock,
       title: "حماية معلومات المستخدمين",
       description: "المنصة تعتمد على تشفير داخلي لحفظ بيانات المستخدمين وعدم مشاركتها مع أي طرف ثالث.",
-      color: "green.500",
-      bgColor: "green.50",
+      color: "brand.neonGreen",
+      bgColor: "rgba(0, 255, 127, 0.05)",
     },
     {
       icon: FaChartLine,
       title: "سجل شفاف",
       description: "كل عملية مالية (إيداع، سحب، أرباح، إحالات) يتم توثيقها لحظة بلحظة ضمن سجل المستخدم، ولا يمكن تعديلها أو إخفاؤها.",
-      color: "purple.500",
-      bgColor: "purple.50",
+      color: "brand.neonPurple",
+      bgColor: "rgba(147, 51, 234, 0.05)",
     },
     {
       icon: AiOutlineTeam,
       title: "فريق دعم ومراقبة داخلي",
       description: "تتم مراجعة جميع المعاملات يدويًا من فريق متخصص قبل الموافقة، لضمان حماية حقوق المستخدمين.",
-      color: "orange.500",
-      bgColor: "orange.50",
+      color: "brand.neonOrange",
+      bgColor: "rgba(255, 165, 0, 0.05)",
     },
     {
       icon: FaBell,
       title: "نعلن كل تحديث أو تغيير بشفافية",
       description: "سواء في الأرباح، الأنظمة، أو مواعيد الإطلاق – يتم إبلاغ الجميع عبر القناة الرسمية.",
-      color: "teal.500",
-      bgColor: "teal.50",
+      color: "brand.neonCyan",
+      bgColor: "rgba(0, 255, 255, 0.05)",
     },
     {
       icon: FaExclamationTriangle,
       title: "لا نعد بأرباح خيالية",
       description: "نحن لا نعد بأرباح خيالية أو وعود وهمية، بل نعمل بخطوات مدروسة ومشاريع حقيقية لضمان الاستمرارية.",
-      color: "red.500",
-      bgColor: "red.50",
+      color: "red.400",
+      bgColor: "rgba(239, 68, 68, 0.05)",
     },
   ];
 
@@ -70,10 +70,12 @@ export default function SecurityInfoPage() {
       <Container maxW="container.xl">
         {/* Header Section */}
         <Box
-          bgGradient="linear(135deg, brand.darkGreen 0%, #0f2027 100%)"
+          bg="rgba(0, 0, 0, 0.6)"
+          backdropFilter="blur(20px)"
           borderRadius="2xl"
-          boxShadow="0 0 24px 4px #d4af37, 0 2px 16px 0 #d4af37, 0 0 0 4px brand.darkGreen"
-          border="2px solid #d4af37"
+          border="1px solid"
+          borderColor="brand.glassBorder"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)"
           p={{ base: 6, md: 8 }}
           mb={8}
           textAlign="center"
@@ -82,45 +84,33 @@ export default function SecurityInfoPage() {
           _before={{
             content: '""',
             position: 'absolute',
-            top: '-50%',
-            left: '-50%',
-            width: '200%',
-            height: '200%',
-            bgGradient: 'conic-gradient(from 90deg at 50% 50%, #d4af37, #fffbe6, brand.darkGreen, #d4af37)',
-            filter: 'blur(40px)',
-            opacity: 0.18,
-            zIndex: 0,
-            animation: 'spin 8s linear infinite',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            bgGradient: 'linear(90deg, brand.neonBlue, brand.neonGreen, brand.neonPurple)',
+            opacity: 0.8,
           }}
-          style={{ fontFamily: 'Orbitron, monospace' }}
-          dir="rtl"
         >
-          <VStack spacing={4} position="relative" zIndex={1}>
-            <Icon as={FaShieldAlt} boxSize={16} color="#d4af37" />
+          <VStack spacing={6} position="relative" zIndex={1}>
+            <Icon as={FaShieldAlt} boxSize={16} color="brand.neonBlue" filter="drop-shadow(0 0 12px brand.neonBlue)" />
             <Heading
               fontSize={{ base: "3xl", md: "4xl" }}
-              color="#d4af37"
+              className="gradient-text"
               fontWeight="extrabold"
               letterSpacing="wider"
-              style={{ fontFamily: 'Orbitron, monospace', textShadow: '0 0 8px #d4af37' }}
             >
               الأمان والشفافية
             </Heading>
             <Text
               fontSize={{ base: "lg", md: "xl" }}
-              color="white"
+              color="gray.300"
               maxW="800px"
               lineHeight="tall"
             >
               نؤكد لجميع مستخدمي منصة بابل أن الأمان والشفافية هما من أهم أولوياتنا، ونعمل على الالتزام بالآتي:
             </Text>
           </VStack>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
         </Box>
 
         {/* Features Grid */}
@@ -128,44 +118,63 @@ export default function SecurityInfoPage() {
           {securityFeatures.map((feature, index) => (
             <Card
               key={index}
-              bg={feature.bgColor}
-              border="2px solid"
-              borderColor={feature.color}
+              bg="rgba(0, 0, 0, 0.6)"
+              backdropFilter="blur(20px)"
+              border="1px solid"
+              borderColor="rgba(255, 255, 255, 0.1)"
               borderRadius="xl"
-              boxShadow="lg"
+              boxShadow="0 4px 20px rgba(0, 0, 0, 0.3)"
               _hover={{
                 transform: "translateY(-4px)",
-                boxShadow: "xl",
+                boxShadow: `0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px ${feature.color}40`,
                 borderColor: feature.color,
+                _before: {
+                  opacity: 1,
+                }
               }}
               transition="all 0.3s ease"
-              dir="rtl"
+              overflow="hidden"
+              position="relative"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '2px',
+                bg: feature.color,
+                opacity: 0,
+                transition: 'opacity 0.3s ease',
+              }}
             >
               <CardBody p={6}>
                 <VStack spacing={4} align="start">
                   <Flex
                     align="center"
                     justify="center"
-                    w={12}
-                    h={12}
+                    w={14}
+                    h={14}
                     borderRadius="full"
-                    bg={feature.color}
-                    color="white"
+                    bg={feature.bgColor}
+                    border="2px solid"
+                    borderColor={feature.color}
                     mb={2}
+                    filter="drop-shadow(0 0 8px currentColor)"
                   >
-                    <Icon as={feature.icon} boxSize={6} />
+                    <Icon as={feature.icon} boxSize={7} color={feature.color} />
                   </Flex>
                   <Heading
                     size="md"
-                    color={feature.color}
+                    color="white"
                     fontWeight="bold"
                     textAlign="right"
                     w="full"
+                    textShadow="0 0 8px rgba(255, 255, 255, 0.3)"
                   >
                     {feature.title}
                   </Heading>
                   <Text
-                    color="gray.700"
+                    color="gray.300"
                     fontSize="md"
                     lineHeight="tall"
                     textAlign="right"
@@ -180,32 +189,49 @@ export default function SecurityInfoPage() {
 
         {/* Contact Section */}
         <Card
-          bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
-          color="white"
+          bg="rgba(0, 0, 0, 0.6)"
+          backdropFilter="blur(20px)"
+          border="1px solid"
+          borderColor="brand.glassBorder"
           borderRadius="2xl"
-          boxShadow="xl"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)"
           p={8}
           textAlign="center"
-          dir="rtl"
+          overflow="hidden"
+          position="relative"
+          _before={{
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            bgGradient: 'linear(90deg, brand.neonBlue, brand.neonCyan)',
+            opacity: 0.8,
+          }}
         >
-          <VStack spacing={4}>
-            <Icon as={FaTelegram} boxSize={12} color="white" />
-            <Heading size="lg" fontWeight="bold">
+          <VStack spacing={6} position="relative" zIndex={1}>
+            <Icon as={FaTelegram} boxSize={12} color="brand.neonCyan" filter="drop-shadow(0 0 12px brand.neonCyan)" />
+            <Heading size="lg" fontWeight="bold" color="white">
               تابعونا دائمًا عبر القناة الرسمية
             </Heading>
-            <Text fontSize="lg" opacity={0.9}>
+            <Text fontSize="lg" color="gray.300" opacity={0.9}>
               للحصول على آخر التحديثات والأخبار المهمة
             </Text>
             <Badge
-              colorScheme="white"
+              bg="brand.neonCyan"
+              color="black"
               variant="solid"
-              px={4}
-              py={2}
+              px={6}
+              py={3}
               borderRadius="full"
               fontSize="md"
               cursor="pointer"
-              _hover={{ transform: "scale(1.05)" }}
-              transition="transform 0.2s"
+              _hover={{ 
+                transform: "scale(1.05)",
+                boxShadow: "0 0 20px rgba(0, 255, 255, 0.5)",
+              }}
+              transition="all 0.3s ease"
               onClick={() => window.open("https://t.me/babel_vip", "_blank")}
             >
               انضم إلى القناة الرسمية

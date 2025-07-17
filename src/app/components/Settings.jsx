@@ -16,6 +16,8 @@ import {
   AlertIcon,
   Avatar,
   Flex,
+  Badge,
+  HStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import {
@@ -24,7 +26,7 @@ import {
   AiOutlineLogout,
   AiOutlineTeam,
 } from "react-icons/ai";
-import { FaTicketAlt, FaUserCircle, FaEnvelope, FaPhone, FaMoneyBillWave, FaTasks, FaKey, FaEthereum, FaCalendarAlt, FaShieldAlt, FaFileContract } from "react-icons/fa";
+import { FaTicketAlt, FaUserCircle, FaEnvelope, FaPhone, FaMoneyBillWave, FaTasks, FaKey, FaEthereum, FaCalendarAlt, FaShieldAlt, FaFileContract, FaCrown } from "react-icons/fa";
 import { getCurrentUser, getTeamMembers } from "../api";
 import { useAuth } from "../contexts/AuthContext";
 import { formatUSDT } from "../utils/numberFormat";
@@ -73,155 +75,241 @@ export default function Settings() {
     }
   };
 
+  const getCurrentVipLevel = () => {
+    if (!user?.balance) return 0;
+    if (user.balance >= 10000) return 8;
+    if (user.balance >= 5000) return 4;
+    if (user.balance >= 1000) return 1;
+    return 0;
+  };
+
+  const vipLevel = getCurrentVipLevel();
+
   const settingsItems = [
     {
       icon: AiOutlineLock,
       label: "إعدادات الأمان",
-      color: "blue.500",
+      color: "brand.neonBlue",
       onClick: () => router.push("/security"),
     },
     {
       icon: FaShieldAlt,
       label: "الأمان والشفافية",
-      color: "green.500",
+      color: "brand.neonGreen",
       onClick: () => router.push("/security-info"),
     },
     {
       icon: AiOutlineQuestionCircle,
       label: "الدعم",
-      color: "purple.500",
+      color: "brand.neonPurple",
       onClick: () => window.open("https://t.me/babel_support", "_blank"),
     },
     {
       icon: AiOutlineTeam,
       label: "فريق العمل",
-      color: "teal.500",
+      color: "brand.neonCyan",
       onClick: () => router.push("/team-members"),
     },
     {
       icon: FaTicketAlt,
       label: "رمز الاحالة (Raffles)",
-      color: "orange.500",
+      color: "brand.neonOrange",
       onClick: () => router.push("/raffles"),
     },
     {
       icon: FaFileContract,
       label: "سياسة الاستخدام",
-      color: "indigo.500",
+      color: "brand.neonPink",
       onClick: () => router.push("/terms"),
     },
     {
       icon: AiOutlineLogout,
       label: "تسجيل الخروج",
-      color: "red.500",
+      color: "red.400",
       onClick: handleLogout,
     },
   ];
 
   return (
-    <Box mb={20} p={{ base: 4, md: 8 }} minH="100vh" maxW="900px" mx="auto">
-      <Heading mb={6} fontSize={{ base: "2xl", md: "3xl" }} textAlign="center">
+    <Box mb={20} p={{ base: 4, md: 8 }} minH="100vh" maxW="1200px" mx="auto">
+      <Heading 
+        mb={8} 
+        fontSize={{ base: "3xl", md: "4xl" }} 
+        textAlign="center"
+        className="gradient-text"
+        fontWeight="extrabold"
+        letterSpacing="wider"
+      >
         إعدادات الحساب
       </Heading>
 
       {loading ? (
-        <Center my={8}><Spinner /></Center>
+        <Center my={12}>
+          <Spinner size="xl" color="brand.neonBlue" thickness="4px" />
+        </Center>
       ) : error ? (
-        <Alert status="error" my={8}><AlertIcon />{error}</Alert>
+        <Alert 
+          status="error" 
+          my={8} 
+          bg="rgba(239, 68, 68, 0.1)"
+          border="1px solid"
+          borderColor="red.400"
+          borderRadius="xl"
+        >
+          <AlertIcon color="red.400" />
+          <Text color="red.400">{error}</Text>
+        </Alert>
       ) : user ? (
         <Box
-          bgGradient="linear(135deg, brand.darkGreen 0%, #0f2027 100%)"
+          bg="rgba(0, 0, 0, 0.6)"
+          backdropFilter="blur(20px)"
           borderRadius="2xl"
-          boxShadow="0 0 24px 4px #d4af37, 0 2px 16px 0 #d4af37, 0 0 0 4px brand.darkGreen"
-          border="2px solid #d4af37"
-          p={{ base: 4, md: 8 }}
+          border="1px solid"
+          borderColor="brand.glassBorder"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.3)"
+          p={{ base: 6, md: 8 }}
           mb={8}
-          maxW={{ base: '100%', sm: '400px' }}
+          maxW={{ base: '100%', lg: '800px' }}
           mx="auto"
           position="relative"
           overflow="hidden"
           _before={{
             content: '""',
             position: 'absolute',
-            top: '-50%',
-            left: '-50%',
-            width: '200%',
-            height: '200%',
-            bgGradient: 'conic-gradient(from 90deg at 50% 50%, #d4af37, #fffbe6, brand.darkGreen, #d4af37)',
-            filter: 'blur(40px)',
-            opacity: 0.18,
-            zIndex: 0,
-            animation: 'spin 8s linear infinite',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            bgGradient: 'linear(90deg, brand.neonBlue, brand.neonGreen, brand.neonPurple)',
+            opacity: 0.8,
           }}
-          style={{ fontFamily: 'Orbitron, monospace' }}
-          dir="rtl"
         >
-          <Flex direction="column" align="center" zIndex={1} position="relative">
-            <Avatar
-              size="xl"
-              name={user.username}
-              icon={<FaUserCircle fontSize="2.5rem" />}
-              bg="whiteAlpha.800"
-              color="#d4af37"
-              border="3px solid #d4af37"
-              boxShadow="0 0 16px 2px #d4af37"
-              mb={2}
-            />
-            <Text fontSize="2xl" fontWeight="extrabold" mb={1} letterSpacing="wider" color="#d4af37" style={{ fontFamily: 'Orbitron, monospace', textShadow: '0 0 8px #d4af37' }}>
-              {user.username}
-            </Text>
-            <Flex align="center" mb={1} color="#fff" fontSize="md">
-              <FaEnvelope style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text><b>البريد الإلكتروني:</b> {user.email}</Text>
+          <VStack spacing={6} align="stretch">
+            {/* User Header */}
+            <Flex direction={{ base: "column", md: "row" }} align="center" justify="space-between">
+              <HStack spacing={4}>
+                <Avatar
+                  size="xl"
+                  name={user.username}
+                  icon={<FaUserCircle fontSize="2.5rem" />}
+                  bg="linear-gradient(135deg, brand.neonBlue, brand.neonPurple)"
+                  color="white"
+                  border="3px solid"
+                  borderColor="brand.neonBlue"
+                  boxShadow="0 0 20px rgba(0, 212, 255, 0.4)"
+                />
+                <VStack align="start" spacing={1}>
+                  <Text fontSize="2xl" fontWeight="bold" color="white">
+                    {user.username}
+                  </Text>
+                  <Badge
+                    colorScheme={vipLevel >= 8 ? "purple" : vipLevel >= 4 ? "orange" : "blue"}
+                    variant="solid"
+                    px={3}
+                    py={1}
+                    borderRadius="full"
+                    fontSize="sm"
+                  >
+            
+                  </Badge>
+                </VStack>
+              </HStack>
+              <Text fontSize="xl" fontWeight="bold" color="brand.neonGreen">
+                {formatUSDT(user.balance)}
+              </Text>
             </Flex>
-            <Flex align="center" mb={1} color="#fff" fontSize="md">
-              <FaPhone style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text><b>رقم الهاتف:</b> {user.phone || <span style={{color:'#eee'}}>-</span>}</Text>
-            </Flex>
-            <Flex align="center" mb={1} color="#fff" fontSize="md">
-              <FaMoneyBillWave style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text><b>الرصيد:</b> {formatUSDT(user.balance)}</Text>
-            </Flex>
-            <Flex align="center" mb={1} color="#fff" fontSize="md">
-              <FaKey style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text><b>رمز الإحالة:</b> {user.referralCode || <span style={{color:'#eee'}}>-</span>}</Text>
-            </Flex>
-            <Flex align="center" mb={1} color="#fff" fontSize="md">
-              <FaTasks style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text><b>المهام المكتملة:</b> {user.completedTasks ?? <span style={{color:'#eee'}}>-</span>}</Text>
-            </Flex>
-            <Flex align="center" mb={1} color="#fff" fontSize="md">
-              <FaEthereum style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text fontWeight="medium" ml={2}><b>تاريخ آخر مهمة:</b></Text>
-              <Text>{user.lastTaskDate ? new Date(user.lastTaskDate).toLocaleString() : <span style={{color:'#eee'}}>-</span>}</Text>
-            </Flex>
-            <Flex align="center" mb={1} color="#fff" fontSize="md">
-              <FaCalendarAlt style={{ marginLeft: 6, color: '#d4af37' }} />
-              <Text><b>تاريخ التسجيل:</b> {user.registrationDate ? new Date(user.registrationDate).toISOString().slice(0, 10) : <span style={{color:'#eee'}}>-</span>}</Text>
-            </Flex>
-          </Flex>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
+
+            {/* User Details Grid */}
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              <Flex align="center" p={3} bg="rgba(255, 255, 255, 0.05)" borderRadius="lg">
+                <FaEnvelope style={{ marginLeft: 8, color: 'brand.neonBlue' }} />
+                <Text color="white" fontSize="sm">
+                  <b>البريد الإلكتروني:</b> {user.email}
+                </Text>
+              </Flex>
+              <Flex align="center" p={3} bg="rgba(255, 255, 255, 0.05)" borderRadius="lg">
+                <FaPhone style={{ marginLeft: 8, color: 'brand.neonGreen' }} />
+                <Text color="white" fontSize="sm">
+                  <b>رقم الهاتف:</b> {user.phone || <span style={{color:'#888'}}>-</span>}
+                </Text>
+              </Flex>
+              <Flex align="center" p={3} bg="rgba(255, 255, 255, 0.05)" borderRadius="lg">
+                <FaKey style={{ marginLeft: 8, color: 'brand.neonPurple' }} />
+                <Text color="white" fontSize="sm">
+                  <b>رمز الإحالة:</b> {user.referralCode || <span style={{color:'#888'}}>-</span>}
+                </Text>
+              </Flex>
+              <Flex align="center" p={3} bg="rgba(255, 255, 255, 0.05)" borderRadius="lg">
+                <FaTasks style={{ marginLeft: 8, color: 'brand.neonOrange' }} />
+                <Text color="white" fontSize="sm">
+                  <b>المهام المكتملة:</b> {user.completedTasks ?? <span style={{color:'#888'}}>-</span>}
+                </Text>
+              </Flex>
+              <Flex align="center" p={3} bg="rgba(255, 255, 255, 0.05)" borderRadius="lg">
+                <FaEthereum style={{ marginLeft: 8, color: 'brand.neonCyan' }} />
+                <Text color="white" fontSize="sm">
+                  <b>تاريخ آخر مهمة:</b> {user.lastTaskDate ? new Date(user.lastTaskDate).toLocaleString() : <span style={{color:'#888'}}>-</span>}
+                </Text>
+              </Flex>
+              <Flex align="center" p={3} bg="rgba(255, 255, 255, 0.05)" borderRadius="lg">
+                <FaCalendarAlt style={{ marginLeft: 8, color: 'brand.neonPink' }} />
+                <Text color="white" fontSize="sm">
+                  <b>تاريخ التسجيل:</b> {user.registrationDate ? new Date(user.registrationDate).toISOString().slice(0, 10) : <span style={{color:'#888'}}>-</span>}
+                </Text>
+              </Flex>
+            </SimpleGrid>
+          </VStack>
         </Box>
       ) : null}
 
-      <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} spacing={6}>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
         {settingsItems.map((item, idx) => (
           <Card
             as="button"
             key={idx}
             onClick={item.onClick}
-            _hover={{ boxShadow: "xl" }}
-            transition="0.2s"
-            py={6}
+            bg="rgba(0, 0, 0, 0.6)"
+            backdropFilter="blur(20px)"
+            border="1px solid"
+            borderColor="rgba(255, 255, 255, 0.1)"
+            borderRadius="xl"
+            boxShadow="0 4px 20px rgba(0, 0, 0, 0.3)"
+        
+            transition="all 0.3s ease"
+            overflow="hidden"
+            position="relative"
+            _before={{
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '2px',
+              bg: item.color,
+              opacity: 0,
+              transition: 'opacity 0.3s ease',
+            }}
+            _hover={{
+              _before: {
+                opacity: 1,
+              }
+            }}
           >
-            <CardBody as={Center} flexDirection="column">
-              <Icon as={item.icon} boxSize={10} color={item.color} mb={2} />
-              <Text fontSize="md" fontWeight="medium" textAlign="center">
+            <CardBody as={Center} flexDirection="column" p={6}>
+              <Icon 
+                as={item.icon} 
+                boxSize={12} 
+                color={item.color} 
+                mb={4}
+                filter="drop-shadow(0 0 8px currentColor)"
+              />
+              <Text 
+                fontSize="lg" 
+                fontWeight="600" 
+                textAlign="center"
+                color="white"
+                textShadow="0 0 8px rgba(255, 255, 255, 0.3)"
+              >
                 {item.label}
               </Text>
             </CardBody>

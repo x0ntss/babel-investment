@@ -6,19 +6,18 @@ import {
   VStack,
   Text,
   Icon,
-  Container,
   Card,
   CardBody,
   List,
   ListItem,
   ListIcon,
-  Badge,
   Flex,
+  Button,
 } from "@chakra-ui/react";
 import {
   AiOutlineCheckCircle,
 } from "react-icons/ai";
-import { FaFileContract, FaUserCheck, FaMoneyBillWave, FaHandshake, FaUsers, FaTasks, FaShieldAlt, FaBan, FaEdit, FaEnvelope } from "react-icons/fa";
+import { FaFileContract, FaUserCheck, FaMoneyBillWave, FaHandshake, FaUsers, FaTasks, FaShieldAlt, FaBan, FaEdit, FaEnvelope, FaTelegram } from "react-icons/fa";
 
 export default function TermsPage() {
   const termsSections = [
@@ -26,7 +25,8 @@ export default function TermsPage() {
       icon: FaFileContract,
       title: "قبول الشروط",
       content: "استخدامك للمنصة يعني موافقتك الكاملة على جميع الشروط والأحكام المذكورة في هذه الوثيقة. في حال عدم موافقتك، يُرجى التوقف عن استخدام المنصة فورًا.",
-      color: "blue.500",
+      color: "brand.neonBlue",
+      bgColor: "rgba(0, 212, 255, 0.05)",
     },
     {
       icon: FaUserCheck,
@@ -36,7 +36,8 @@ export default function TermsPage() {
         "يجب على المستخدم إدخال بيانات صحيحة عند التسجيل.",
         "لا يجوز مشاركة الحساب مع أطراف أخرى.",
       ],
-      color: "green.500",
+      color: "brand.neonGreen",
+      bgColor: "rgba(0, 255, 127, 0.05)",
     },
     {
       icon: FaMoneyBillWave,
@@ -46,7 +47,8 @@ export default function TermsPage() {
         "يتحمل المستخدم كامل المسؤولية عند اتخاذ قرار الاستثمار.",
         "لا يمكن استرداد رأس المال قبل انتهاء مدة العقد المحددة لكل خطة أو مشروع.",
       ],
-      color: "orange.500",
+      color: "brand.neonOrange",
+      bgColor: "rgba(255, 165, 0, 0.05)",
     },
     {
       icon: FaHandshake,
@@ -57,7 +59,8 @@ export default function TermsPage() {
         "يتم خصم ضريبة بنسبة 15% على أي عملية سحب.",
         "تأكيد الإيداع يتم يدويًا من قبل فريق الإدارة بعد التحقق من التحويل.",
       ],
-      color: "purple.500",
+      color: "brand.neonPurple",
+      bgColor: "rgba(147, 51, 234, 0.05)",
     },
     {
       icon: FaUsers,
@@ -66,7 +69,8 @@ export default function TermsPage() {
         "يتم منح مكافآت إحالة بنسبة 10% (أول أسبوع)، ثم 5% بعد ذلك.",
         "أي محاولة تلاعب بنظام الإحالة أو التسجيل المتكرر تؤدي إلى حظر الحساب نهائيًا.",
       ],
-      color: "teal.500",
+      color: "brand.neonCyan",
+      bgColor: "rgba(0, 255, 255, 0.05)",
     },
     {
       icon: FaTasks,
@@ -76,7 +80,8 @@ export default function TermsPage() {
         "لا يجوز استخدام أدوات آلية (بوتات أو نقر آلي) لأداء المهام.",
         "يتم إلغاء المكافآت مباشرة في حال اكتشاف استخدام غير مشروع للنظام.",
       ],
-      color: "cyan.500",
+      color: "brand.neonBlue",
+      bgColor: "rgba(0, 212, 255, 0.05)",
     },
     {
       icon: FaShieldAlt,
@@ -85,7 +90,8 @@ export default function TermsPage() {
         "تلتزم المنصة بعدم مشاركة أي معلومات خاصة بالمستخدمين مع أي جهة خارجية.",
         "جميع البيانات مشفّرة وآمنة ويتم التعامل معها بسرية تامة.",
       ],
-      color: "indigo.500",
+      color: "brand.neonGreen",
+      bgColor: "rgba(0, 255, 127, 0.05)",
     },
     {
       icon: FaBan,
@@ -95,25 +101,28 @@ export default function TermsPage() {
         "إساءة استخدام نظام الإحالة أو المهام.",
         "محاولات اختراق أو التلاعب بأنظمة المنصة.",
       ],
-      color: "red.500",
+      color: "red.400",
+      bgColor: "rgba(239, 68, 80, 0.05)",
     },
     {
       icon: FaEdit,
       title: "التعديلات على السياسة",
       content: "يحق لإدارة منصة بابل تعديل هذه الشروط في أي وقت، ويتم إخطار المستخدمين عبر القناة الرسمية أو داخل التطبيق.",
-      color: "pink.500",
+      color: "brand.neonPurple",
+      bgColor: "rgba(147, 51, 234, 0.05)",
     },
   ];
 
   return (
     <Box mb={20} p={{ base: 4, md: 8 }} minH="100vh" maxW="1200px" mx="auto">
-      <Container maxW="container.xl">
+      <VStack spacing={8} align="stretch">
         {/* Header Section */}
         <Box
-          bgGradient="linear(135deg, brand.darkGreen 0%, #0f2027 100%)"
+          bg="rgba(0, 0, 0, 0.8)"
+          backdropFilter="blur(20px)"
+          border="1px solid rgba(255, 255, 255, 0.1)"
           borderRadius="2xl"
-          boxShadow="0 0 24px 4px #d4af37, 0 2px 16px 0 #d4af37, 0 0 0 4px brand.darkGreen"
-          border="2px solid #d4af37"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.03)"
           p={{ base: 6, md: 8 }}
           mb={8}
           textAlign="center"
@@ -122,62 +131,65 @@ export default function TermsPage() {
           _before={{
             content: '""',
             position: 'absolute',
-            top: '-50%',
-            left: '-50%',
-            width: '200%',
-            height: '200%',
-            bgGradient: 'conic-gradient(from 90deg at 50% 50%, #d4af37, #fffbe6, brand.darkGreen, #d4af37)',
-            filter: 'blur(40px)',
-            opacity: 0.18,
-            zIndex: 0,
-            animation: 'spin 8s linear infinite',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            bgGradient: 'linear(90deg, brand.neonBlue, brand.neonGreen, brand.neonPurple)',
+            opacity: 0.8,
           }}
           style={{ fontFamily: 'Orbitron, monospace' }}
           dir="rtl"
         >
-          <VStack spacing={4} position="relative" zIndex={1}>
-            <Icon as={FaFileContract} boxSize={16} color="#d4af37" />
+          <VStack spacing={6} position="relative" zIndex={1}>
+            <Icon as={FaFileContract} boxSize={16} color="brand.neonBlue" filter="drop-shadow(0 0 2px brand.neonBlue)" />
             <Heading
               fontSize={{ base: "3xl", md: "4xl" }}
-              color="#d4af37"
+              className="gradient-text"
               fontWeight="extrabold"
               letterSpacing="wider"
-              style={{ fontFamily: 'Orbitron, monospace', textShadow: '0 0 8px #d4af37' }}
             >
               سياسة استخدام منصة بابل
             </Heading>
             <Text
               fontSize={{ base: "lg", md: "xl" }}
-              color="white"
+              color="gray.300"
               maxW="800px"
               lineHeight="tall"
             >
               مرحبًا بك في منصة بابل للاستثمار الرقمي. باستخدامك للمنصة، فإنك توافق على الشروط والسياسات التالية:
             </Text>
           </VStack>
-          <style>{`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}</style>
         </Box>
 
         {/* Terms Sections */}
-        <VStack spacing={8} align="stretch">
+        <VStack spacing={6} align="stretch">
           {termsSections.map((section, index) => (
             <Card
               key={index}
-              bg="white"
+              bg="rgba(0, 0, 0, 0.6)"
+              backdropFilter="blur(20px)"
+              border="1px solid rgba(255, 255, 255, 0.1)"
               borderRadius="xl"
-              boxShadow="lg"
-              border="2px solid"
-              borderColor={section.color}
+              boxShadow="0 4px 20px rgba(0, 0, 0, 0.3)"
+              overflow="hidden"
+              position="relative"
               _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "xl",
+                transform: "translateY(-4px)",
+                boxShadow: `0 8px 30px rgba(0, 0, 0, 0.40), 0 0 0 4px ${section.color}40`,
+                borderColor: section.color,
               }}
               transition="all 0.3s ease"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '2px',
+                bg: section.color,
+                opacity: 0.8
+              }}
               dir="rtl"
             >
               <CardBody p={6}>
@@ -188,15 +200,18 @@ export default function TermsPage() {
                     w={12}
                     h={12}
                     borderRadius="full"
-                    bg={section.color}
-                    color="white"
+                    bg={section.bgColor}
+                    border="2px solid"
+                    borderColor={section.color}
+                    color={section.color}
                     mr={4}
+                    filter="drop-shadow(0 0px currentColor)"
                   >
                     <Icon as={section.icon} boxSize={6} />
                   </Flex>
                   <Heading
                     size="md"
-                    color={section.color}
+                    color="white"
                     fontWeight="bold"
                   >
                     {section.title}
@@ -205,7 +220,7 @@ export default function TermsPage() {
                 
                 {section.content ? (
                   <Text
-                    color="gray.700"
+                    color="gray.300"
                     fontSize="md"
                     lineHeight="tall"
                     textAlign="right"
@@ -217,7 +232,7 @@ export default function TermsPage() {
                     {section.items.map((item, itemIndex) => (
                       <ListItem key={itemIndex} display="flex" alignItems="start">
                         <ListIcon as={AiOutlineCheckCircle} color={section.color} mt={1} />
-                        <Text color="gray.700" fontSize="md">
+                        <Text color="gray.300">
                           {item}
                         </Text>
                       </ListItem>
@@ -231,40 +246,57 @@ export default function TermsPage() {
 
         {/* Contact Section */}
         <Card
-          bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
-          color="white"
+          bg="rgba(0, 0, 0, 0.8)"
+          backdropFilter="blur(20px)"
+          border="1px solid rgba(255, 255, 255, 0.1)"
           borderRadius="2xl"
-          boxShadow="xl"
+          boxShadow="0 8px 32px rgba(0, 0, 0, 0.03)"
           p={8}
           mt={8}
           textAlign="center"
+          position="relative"
+          _before={{
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            bgGradient: 'linear(90deg, brand.neonBlue, brand.neonGreen, brand.neonPurple)',
+            opacity: 0.8,
+          }}
           dir="rtl"
         >
-          <VStack spacing={4}>
-            <Icon as={FaEnvelope} boxSize={12} color="white" />
-            <Heading size="lg" fontWeight="bold">
+          <VStack spacing={6} position="relative" zIndex={1}>
+            <Icon as={FaEnvelope} boxSize={12} color="brand.neonCyan" filter="drop-shadow(0 0 2px brand.neonCyan)" />
+            <Heading size="lg" fontWeight="bold" color="white">
               للتواصل والدعم
             </Heading>
-            <Text fontSize="lg" opacity={0.9}>
+            <Text fontSize="lg" color="gray.300">
               لأي استفسار أو طلب دعم، يرجى التواصل معنا من خلال:
             </Text>
-            <Badge
-              colorScheme="white"
-              variant="solid"
-              px={4}
-              py={2}
-              borderRadius="full"
-              fontSize="md"
-              cursor="pointer"
-              _hover={{ transform: "scale(1.05)" }}
-              transition="transform 0.2s"
+            <Button
+              leftIcon={<FaTelegram />}
+              colorScheme="telegram"
+              size="lg"
+              bg="brand.neonCyan"
+              color="black"
+              _hover={{
+                bg: "brand.neonCyan",
+                transform: "translateY(-2px)",
+                boxShadow: "0 8px 25px rgba(0, 255, 255, 0.4)",
+              }}
+              _active={{
+                transform: "translateY(0)",
+              }}
+              transition="all 0.3s ease"
               onClick={() => window.open("https://t.me/babel_vip", "_blank")}
             >
               قناة التحديثات الرسمية
-            </Badge>
+            </Button>
           </VStack>
         </Card>
-      </Container>
+      </VStack>
     </Box>
   );
 } 

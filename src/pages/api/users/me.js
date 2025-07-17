@@ -25,6 +25,13 @@ export default async function handler(req, res) {
       // Calculate level and daily income based on vipCapital
       const { level, dailyIncomeMin, dailyIncomeMax, percentRange } = getLevelAndIncome(user.vipCapital);
       
+      // Calculate transaction totals
+      const totalDeposits = user.transactions?.filter(t => t.type === 'deposit' && t.status === 'completed')
+        .reduce((sum, t) => sum + t.amount, 0) || 0;
+      
+      const totalWithdrawals = user.transactions?.filter(t => t.type === 'withdrawal' && t.status === 'completed')
+        .reduce((sum, t) => sum + t.amount, 0) || 0;
+      
       // Return user data with calculated fields
       res.json({
         ...user.toObject(),
@@ -33,6 +40,8 @@ export default async function handler(req, res) {
         dailyIncomeMax,
         percentRange,
         registrationDate: user.registrationDateFormatted,
+        totalDeposits,
+        totalWithdrawals,
       });
     } else {
       res.status(404).json({ message: 'User not found' });

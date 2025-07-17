@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import PageLoader from "./PageLoader";
+import { Box } from "@chakra-ui/react";
 
 export default function ClientLayout({ children }) {
   const { user } = useAuth();
@@ -11,7 +12,7 @@ export default function ClientLayout({ children }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   
-  // Don't show main Navbar on admin routes
+  // Don't show main navigation on admin routes
   const isAdminRoute = pathname?.startsWith('/admin');
   
   // Handle navigation loading states
@@ -31,10 +32,21 @@ export default function ClientLayout({ children }) {
   }, [router]);
 
   return (
-    <div>
+    <Box position="relative" minH="100vh">
       {isLoading && <PageLoader />}
+      
+      {/* Combined Navbar - handles both mobile sidebar and desktop navbar */}
       {user && !isAdminRoute && <Navbar />}
-      {children}
-    </div>
+      
+      <Box
+        pb={{ base: 0, md: user && !isAdminRoute ? "100px" : 0 }}
+        minH="100vh"
+        bg="transparent"
+        position="relative"
+        zIndex={1}
+      >
+        {children}
+      </Box>
+    </Box>
   );
 } 
