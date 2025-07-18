@@ -92,60 +92,64 @@ export default function UsersAdmin() {
   };
 
   if (loading) {
-    return <Center minH="60vh"><Spinner size="xl" color="blue.500" thickness="4px" /></Center>;
+    return <Center minH="60vh"><Spinner size="xl" color="blue.400" thickness="4px" /></Center>;
   }
   if (error) {
-    return <Center minH="60vh"><Text color="red.500" fontSize="lg">{error}</Text></Center>;
+    return <Center minH="60vh"><Text color="red.400" fontSize="lg">{error}</Text></Center>;
   }
 
   return (
-    <Box p={4}>
+    <Box px={{ base: 2, md: 4, lg: 8 }} py={{ base: 4, md: 8, lg: 12 }} bg="gray.900" minH="100vh" w="full" maxW="100%">
       <Input
         placeholder="بحث عن مستخدم..."
         value={search}
         onChange={e => setSearch(e.target.value)}
         mb={4}
         size="lg"
-        borderRadius="md"
-        bg="gray.50"
+        borderRadius="lg"
+        bg="gray.800"
+        color="white"
         _placeholder={{ color: 'gray.400' }}
         textAlign="right"
+        boxShadow="md"
+        w="full"
+        maxW="100%"
       />
-      <Box overflowX={{ base: 'auto', md: 'visible' }}>
-        <Table variant="simple" size="md" bg="white" borderRadius="lg" boxShadow="md" minW="800px">
-          <Thead>
+      <Box overflowX="auto" w="full" maxW="100%">
+        <Table variant="simple" size="md" bg="gray.800" borderRadius="lg" boxShadow="md" w="full" maxW="100%" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
+          <Thead bg="gray.700">
             <Tr>
-              <Th>اسم المستخدم</Th>
-              <Th>البريد الإلكتروني</Th>
-              <Th>رقم الجوال</Th>
-              <Th>العنوان</Th>
-              <Th>الرصيد</Th>
-              <Th>رمز الإحالة</Th>
-              <Th>إجراءات</Th>
+              <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>اسم المستخدم</Th>
+              <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>البريد الإلكتروني</Th>
+              <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>رقم الجوال</Th>
+              <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>العنوان</Th>
+              <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>الرصيد</Th>
+              <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>رمز الإحالة</Th>
+              <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>إجراءات</Th>
             </Tr>
           </Thead>
           <Tbody>
             {Array.isArray(users) && users.filter(u => u.username.includes(search) || u.email.includes(search)).map(user => (
-              <Tr key={user._id}>
-                <Td>{user.username}</Td>
-                <Td>{user.email}</Td>
-                <Td>{user.phone}</Td>
-                <Td>
+              <Tr key={user._id} _hover={{ bg: 'gray.700' }}>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.username}</Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.email}</Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.phone}</Td>
+                <Td fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
                   <Tooltip label="نسخ العنوان" aria-label="نسخ العنوان">
-                    <Button variant="ghost" size="sm" onClick={() => handleCopy(user.walletAddress)} rightIcon={<CopyIcon />}>
+                    <Button variant="ghost" size="sm" onClick={() => handleCopy(user.walletAddress)} rightIcon={<CopyIcon />} color="blue.400">
                       {user.walletAddress}
                     </Button>
                   </Tooltip>
                 </Td>
-                <Td>{user.balance}</Td>
-                <Td>{user.referralCode}</Td>
-                <Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.balance}</Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.referralCode}</Td>
+                <Td fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
                   <HStack spacing={1}>
                     <Tooltip label="إضافة رصيد">
-                      <IconButton icon={<AddIcon />} size="sm" colorScheme="green" onClick={() => openBalanceModal(user, 'add')} />
+                      <IconButton icon={<AddIcon />} size="sm" colorScheme="green" onClick={() => openBalanceModal(user, 'add')} boxShadow="md" />
                     </Tooltip>
                     <Tooltip label="خصم رصيد">
-                      <IconButton icon={<MinusIcon />} size="sm" colorScheme="red" onClick={() => openBalanceModal(user, 'deduct')} />
+                      <IconButton icon={<MinusIcon />} size="sm" colorScheme="red" onClick={() => openBalanceModal(user, 'deduct')} boxShadow="md" />
                     </Tooltip>
                   </HStack>
                 </Td>
@@ -156,17 +160,17 @@ export default function UsersAdmin() {
       </Box>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg="gray.800" color="white" boxShadow="md" borderRadius="lg" border="1px solid" borderColor="gray.700">
           <ModalHeader>{balanceAction === 'add' ? 'إضافة رصيد' : 'خصم رصيد'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb={2}>المستخدم: {selectedUser?.username}</Text>
+            <Text mb={2} color="white">المستخدم: {selectedUser?.username}</Text>
             <NumberInput min={1} value={amount} onChange={setAmount} width="100%">
               <NumberInputField placeholder="أدخل المبلغ" textAlign="right" />
             </NumberInput>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleBalanceSubmit}>
+            <Button colorScheme="blue" mr={3} onClick={handleBalanceSubmit} boxShadow="md">
               {balanceAction === 'add' ? 'إضافة' : 'خصم'}
             </Button>
             <Button onClick={onClose}>إلغاء</Button>

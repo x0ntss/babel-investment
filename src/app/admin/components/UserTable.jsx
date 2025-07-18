@@ -10,33 +10,22 @@ import {
   Box,
   Text,
   Button,
-  HStack,
-  Stack,
-  Link as ChakraLink,
   Badge,
   Tooltip,
-  useBreakpointValue,
-  Flex,
-  IconButton,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider
+  useColorModeValue,
+  HStack
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { ChevronDownIcon, ExternalLinkIcon } from '@chakra-ui/icons';
-import { componentStyles } from '../theme';
-import { getLevelAndIncome } from '../../utils/vipLevels';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 const UserTable = ({ users, onUpdateBalance }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const formatWalletAddress = (address) => {
-    if (!address) return '-';
-    if (address.length <= 20) return address;
-    return `${address.substring(0, 10)}...${address.substring(address.length - 10)}`;
-  };
+  const bgTable = useColorModeValue('gray.100', 'gray.800');
+  const bgHeader = useColorModeValue('gray.200', 'gray.700');
+  const textColor = useColorModeValue('black', 'white');
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -48,164 +37,74 @@ const UserTable = ({ users, onUpdateBalance }) => {
   };
 
   return (
-    <Box mt={6} overflowX="auto">
-      <Table {...componentStyles.adminTable}>
-        <Thead bg="gray.50">
+    <Box w="100%" overflowX="auto" mt={6}>
+      <Table variant="simple" size="sm" minW="800px">
+        <Thead bg={bgHeader}>
           <Tr>
-            <Th>Username</Th>
+            <Th>User</Th>
             <Th>Email</Th>
             <Th>Phone</Th>
-            <Th>Code</Th>
             <Th>Balance</Th>
-            <Th>VIP Capital</Th>
-            <Th>Daily Income</Th>
-            <Th>Wallet Address</Th>
-            <Th>Referral Code</Th>
-            <Th>Completed Tasks</Th>
-            <Th>Last Task Date</Th>
-            <Th>Team Members</Th>
+            <Th>VIP</Th>
+            <Th>Ref Code</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
-        <Tbody>
+        <Tbody bg={bgTable} color={textColor}>
           {users && users.length > 0 ? (
             users.map(user => (
-              <Tr key={user._id} _hover={{ bg: 'gray.50' }}>
-                <Td fontWeight="medium">{user.username}</Td>
-                <Td>{user.email}</Td>
-                <Td>{user.phone || <Text color="gray.400">-</Text>}</Td>
-                <Td>{user.code || <Text color="gray.400">-</Text>}</Td>
+              <Tr key={user._id}>
                 <Td>
-                  <Badge colorScheme="blue" variant="subtle">
-                    {user.balance} USDT
-                  </Badge>
+                  <Tooltip label={user.username}>
+                    <Text fontSize="xs" isTruncated>{user.username}</Text>
+                  </Tooltip>
                 </Td>
                 <Td>
-                  <Badge colorScheme="purple" variant="subtle">
-                    {user.vipCapital ?? 0} USDT
-                  </Badge>
+                  <Tooltip label={user.email}>
+                    <Text fontSize="xs" isTruncated>{user.email}</Text>
+                  </Tooltip>
                 </Td>
                 <Td>
-                  {(() => {
-                    const { dailyIncomeMin, dailyIncomeMax } = getLevelAndIncome(user.vipCapital ?? 0);
-                    return (
-                      <Text fontSize="sm" color="teal.700">
-                        {dailyIncomeMin.toFixed(2)} - {dailyIncomeMax.toFixed(2)} USDT
-                      </Text>
-                    );
-                  })()}
+                  <Text fontSize="xs">{user.phone || '-'}</Text>
                 </Td>
                 <Td>
-                  {user.walletAddress ? (
-                    <Tooltip label={user.walletAddress} placement="top">
-                      <Text
-                        fontSize="xs"
-                        fontFamily="mono"
-                        color="green.600"
-                        cursor="pointer"
-                        maxW="120px"
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                        whiteSpace="nowrap"
-                      >
-                        {formatWalletAddress(user.walletAddress)}
-                      </Text>
-                    </Tooltip>
-                  ) : (
-                    <Text color="gray.400" fontSize="sm">-</Text>
-                  )}
-                </Td>
-                <Td>{user.referralCode || <Text color="gray.400">-</Text>}</Td>
-                <Td>
-                  <Badge colorScheme="green" variant="subtle">
-                    {user.completedTasks ?? 0}
-                  </Badge>
+                  <Badge colorScheme="blue" fontSize="xs">{user.balance}</Badge>
                 </Td>
                 <Td>
-                  {user.lastTaskDate ? (
-                    <Text fontSize="xs">
-                      {new Date(user.lastTaskDate).toLocaleDateString()}
-                    </Text>
-                  ) : (
-                    <Text color="gray.400" fontSize="sm">-</Text>
-                  )}
+                  <Badge colorScheme="purple" fontSize="xs">{user.vipCapital ?? 0}</Badge>
                 </Td>
                 <Td>
-                  <Button
-                    as={NextLink}
-                    href={`/admin/team/${user._id}`}
-                    size="sm"
-                    colorScheme="teal"
-                    variant="outline"
-                    rightIcon={<ExternalLinkIcon />}
-                    {...componentStyles.adminButton}
-                  >
-                    View Team
-                  </Button>
+                  <Text fontSize="xs">{user.referralCode || '-'}</Text>
                 </Td>
                 <Td>
-                  {isMobile ? (
+                  <HStack spacing={1}>
+                    <Button
+                      as={NextLink}
+                      href={`/admin/team/${user._id}`}
+                      size="xs"
+                      colorScheme="teal"
+                      variant="outline"
+                      rightIcon={<ExternalLinkIcon />}
+                    >
+                      Team
+                    </Button>
                     <Menu>
-                      <MenuButton
-                        as={Button}
-                        size="sm"
-                        rightIcon={<ChevronDownIcon />}
-                        {...componentStyles.adminButton}
-                      >
-                        Actions
+                      <MenuButton as={Button} size="xs" colorScheme="gray">
+                        ...
                       </MenuButton>
                       <MenuList>
-                        <MenuItem
-                          onClick={() => onUpdateBalance(user, 'add')}
-                          color="green.600"
-                        >
-                          Add Balance
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => onUpdateBalance(user, 'subtract')}
-                          color="red.600"
-                        >
-                          Subtract Balance
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem
-                          as={NextLink}
-                          href={`/admin/team/${user._id}`}
-                          icon={<ExternalLinkIcon />}
-                        >
-                          View Team
-                        </MenuItem>
+                        <MenuItem onClick={() => onUpdateBalance(user, 'add')} color="green.400">Add Balance</MenuItem>
+                        <MenuItem onClick={() => onUpdateBalance(user, 'subtract')} color="red.400">Subtract Balance</MenuItem>
                       </MenuList>
                     </Menu>
-                  ) : (
-                    <HStack spacing={2}>
-                      <Button
-                        colorScheme="green"
-                        size="sm"
-                        onClick={() => onUpdateBalance(user, 'add')}
-                        {...componentStyles.adminButton}
-                      >
-                        Add
-                      </Button>
-                      <Button
-                        colorScheme="red"
-                        size="sm"
-                        onClick={() => onUpdateBalance(user, 'subtract')}
-                        {...componentStyles.adminButton}
-                      >
-                        Subtract
-                      </Button>
-                    </HStack>
-                  )}
+                  </HStack>
                 </Td>
               </Tr>
             ))
           ) : (
             <Tr>
-              <Td colSpan={11}>
-                <Text textAlign="center" color="gray.500" py={8}>
-                  No users found.
-                </Text>
+              <Td colSpan={7} textAlign="center" py={4} fontSize="sm" color="gray.500">
+                No users found.
               </Td>
             </Tr>
           )}
@@ -215,4 +114,4 @@ const UserTable = ({ users, onUpdateBalance }) => {
   );
 };
 
-export default UserTable; 
+export default UserTable;

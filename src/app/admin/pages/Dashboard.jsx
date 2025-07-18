@@ -16,17 +16,19 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <Box p={8}>
-      <Heading size="lg" mb={8}>Admin Dashboard</Heading>
-      {loading ? <Spinner /> : error ? <Text color="red.500">{error}</Text> : (
+    <Box px={{ base: 4, md: 8, lg: 12 }} py={{ base: 6, md: 10, lg: 16 }} bg="gray.900" minH="100vh">
+      <Heading size="lg" mb={8} color="white">
+        Admin Dashboard
+      </Heading>
+      {loading ? <Spinner color="blue.400" /> : error ? <Text color="red.400">{error}</Text> : (
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
-          <Stat p={6} shadow="md" borderRadius="lg" bg="white">
-            <StatLabel>Total Users</StatLabel>
-            <StatNumber>{stats.totalUsers}</StatNumber>
+          <Stat p={6} borderRadius="lg" boxShadow="md" bg="gray.800" textAlign="center">
+            <StatLabel color="gray.300" fontWeight="bold">Total Users</StatLabel>
+            <StatNumber color="white" fontSize="3xl">{stats.totalUsers}</StatNumber>
           </Stat>
-          <Stat p={6} shadow="md" borderRadius="lg" bg="white">
-            <StatLabel>Total Balance</StatLabel>
-            <StatNumber>${stats.totalBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</StatNumber>
+          <Stat p={6} borderRadius="lg" boxShadow="md" bg="gray.800" textAlign="center">
+            <StatLabel color="gray.300" fontWeight="bold">Total Balance</StatLabel>
+            <StatNumber color="white" fontSize="3xl">${stats.totalBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</StatNumber>
           </Stat>
         </SimpleGrid>
       )}

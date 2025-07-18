@@ -24,15 +24,21 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider
+  MenuDivider,
+  useColorModeValue
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ExternalLinkIcon } from '@chakra-ui/icons';
-import { componentStyles } from '../theme';
 
-const TransactionTable = ({ transactions, onReview, rtl }) => {
+const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
   const [modalImage, setModalImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const fontSize = tableFontSize || { base: 'xs', md: 'sm', lg: 'md' };
+  const bgTable = useColorModeValue('gray.100', 'gray.800');
+  const bgHeader = useColorModeValue('gray.200', 'gray.700');
+  const bgHover = useColorModeValue('gray.300', 'gray.700');
+  const textColor = useColorModeValue('black', 'white');
+  const secondaryText = useColorModeValue('gray.700', 'gray.300');
 
   // Safety check for transactions data
   const safeTransactions = Array.isArray(transactions) ? transactions : [];
@@ -83,48 +89,52 @@ const TransactionTable = ({ transactions, onReview, rtl }) => {
   };
 
   return (
-    <Box mt={6} dir={rtl ? "rtl" : undefined} overflowX="auto">
-      <Table {...componentStyles.adminTable}>
-        <Thead bg="gray.50">
+    <Box mt={6} dir={rtl ? "rtl" : undefined} overflowX="auto" w="full" maxW="100%">
+      <Table w="full" maxW="100%" fontSize={fontSize} bg={bgTable}>
+        <Thead bg={bgHeader}>
           <Tr>
-            <Th>المستخدم</Th>
-            <Th>النوع</Th>
-            <Th>القيمة</Th>
-            <Th>الحالة</Th>
-            <Th>عنوان المحفظة</Th>
-            <Th>صورة الإثبات</Th>
-            <Th>إجراءات</Th>
+            <Th color={secondaryText} fontSize={fontSize}>User</Th>
+            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Type</Th>
+            <Th color={secondaryText} fontSize={fontSize}>Amount</Th>
+            <Th color={secondaryText} fontSize={fontSize}>Status</Th>
+            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Wallet</Th>
+            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Proof</Th>
+            <Th color={secondaryText} fontSize={fontSize}>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>
           {safeTransactions.length > 0 ? (
             safeTransactions.map((transaction, idx) => (
-              <Tr key={transaction._id || idx} _hover={{ bg: 'gray.50' }}>
-                <Td fontWeight="medium">{transaction?.username || 'Unknown User'}</Td>
-                <Td>
+              <Tr key={transaction._id || idx} _hover={{ bg: bgHover }}>
+                <Td fontWeight="medium" color={textColor} fontSize={fontSize} maxW={{ base: '80px', md: '160px' }} isTruncated>
+                  <Tooltip label={transaction?.username || 'Unknown User'}>
+                    {transaction?.username || 'Unknown User'}
+                  </Tooltip>
+                </Td>
+                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
                   <Badge colorScheme={getTypeColor(transaction?.type)} variant="subtle">
-                    {transaction?.type === 'deposit' ? 'إيداع' : transaction?.type === 'withdrawal' ? 'سحب' : transaction?.type || 'Unknown'}
+                    {transaction?.type === 'deposit' ? 'Dep' : transaction?.type === 'withdrawal' ? 'Wdr' : transaction?.type || 'Unknown'}
                   </Badge>
                 </Td>
-                <Td>
-                  <Text fontWeight="bold" color="blue.600">
-                    {transaction?.amount || 0} USDT
+                <Td fontSize={fontSize} color={textColor} maxW={{ base: '60px', md: '100px' }} isTruncated>
+                  <Text fontWeight="bold" color="blue.400" fontSize={fontSize}>
+                    {transaction?.amount || 0}
                   </Text>
                 </Td>
-                <Td>
+                <Td fontSize={fontSize} color={textColor}>
                   <Badge colorScheme={getStatusColor(transaction?.status)} variant="subtle">
-                    {transaction?.status === 'pending' ? 'قيد المراجعة' :
-                     transaction?.status === 'completed' ? 'تمت الموافقة' :
-                     transaction?.status === 'rejected' ? 'مرفوض' : transaction?.status || 'Unknown'}
+                    {transaction?.status === 'pending' ? 'Pending' :
+                     transaction?.status === 'completed' ? 'Done' :
+                     transaction?.status === 'rejected' ? 'Rejected' : transaction?.status || 'Unknown'}
                   </Badge>
                 </Td>
-                <Td>
+                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }} maxW="120px" isTruncated>
                   {transaction?.type === 'withdrawal' && transaction?.walletAddress ? (
                     <Tooltip label={transaction.walletAddress} placement="top">
                       <Text 
-                        fontSize="xs" 
+                        fontSize={fontSize}
                         fontFamily="mono" 
-                        color="green.600"
+                        color="green.300"
                         cursor="pointer"
                         maxW="120px"
                         overflow="hidden"
@@ -135,15 +145,15 @@ const TransactionTable = ({ transactions, onReview, rtl }) => {
                       </Text>
                     </Tooltip>
                   ) : (
-                    <Text color="gray.400" fontSize="sm">-</Text>
+                    <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
-                <Td>
+                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
                   {transaction?.type === 'deposit' && transaction?.proofImage ? (
                     <Image
                       src={getImageUrl(transaction.proofImage)}
-                      alt="صورة الإثبات"
-                      boxSize="50px"
+                      alt="Proof"
+                      boxSize="36px"
                       objectFit="cover"
                       borderRadius="md"
                       cursor="pointer"
@@ -152,10 +162,10 @@ const TransactionTable = ({ transactions, onReview, rtl }) => {
                       transition="transform 0.2s"
                     />
                   ) : (
-                    <Text color="gray.400" fontSize="sm">-</Text>
+                    <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
-                <Td>
+                <Td fontSize={fontSize} color={textColor}>
                   {transaction?.status === 'pending' ? (
                     isMobile ? (
                       <Menu>
@@ -163,22 +173,21 @@ const TransactionTable = ({ transactions, onReview, rtl }) => {
                           as={Button} 
                           size="sm" 
                           rightIcon={<ChevronDownIcon />}
-                          {...componentStyles.adminButton}
                         >
-                          Actions
+                          ...
                         </MenuButton>
                         <MenuList>
                           <MenuItem 
                             onClick={() => onReview(transaction?.userId, transaction?._id, 'completed')}
-                            color="green.600"
+                            color="green.300"
                           >
-                            موافقة
+                            Approve
                           </MenuItem>
                           <MenuItem 
                             onClick={() => onReview(transaction?.userId, transaction?._id, 'rejected')}
-                            color="red.600"
+                            color="red.300"
                           >
-                            رفض
+                            Reject
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -188,31 +197,29 @@ const TransactionTable = ({ transactions, onReview, rtl }) => {
                           colorScheme="green" 
                           size="sm" 
                           onClick={() => onReview(transaction?.userId, transaction?._id, 'completed')}
-                          {...componentStyles.adminButton}
                         >
-                          موافقة
+                          Approve
                         </Button>
                         <Button 
                           colorScheme="red" 
                           size="sm" 
                           onClick={() => onReview(transaction?.userId, transaction?._id, 'rejected')}
-                          {...componentStyles.adminButton}
                         >
-                          رفض
+                          Reject
                         </Button>
                       </HStack>
                     )
                   ) : (
-                    <Text color="gray.400">-</Text>
+                    <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
               </Tr>
             ))
           ) : (
             <Tr>
-              <Td colSpan={7}>
-                <Text textAlign="center" color="gray.500" py={8}>
-                  لا توجد معاملات.
+              <Td colSpan={7} fontSize={fontSize} color={textColor}>
+                <Text textAlign="center" color="gray.500" py={8} fontSize={fontSize}>
+                  No transactions found.
                 </Text>
               </Td>
             </Tr>

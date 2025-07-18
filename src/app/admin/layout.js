@@ -1,5 +1,5 @@
 "use client";
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box } from '@chakra-ui/react';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import rtl from 'stylis-plugin-rtl';
@@ -69,12 +69,23 @@ export default function AdminLayout({ children }) {
   return (
     <CacheProvider value={cacheRtl}>
       <ChakraProvider theme={theme} resetCSS>
-        <div dir="rtl" style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e7ed 100%)' }}>
+        <Box
+          minH="100vh"
+          bg="gray.900"
+          fontFamily="Tajawal, Cairo, Arial, sans-serif"
+          color="white"
+          sx={{
+            '::-webkit-scrollbar': { width: '8px', background: 'rgba(0,0,0,0.2)' },
+            '::-webkit-scrollbar-thumb': { background: '#2563eb', borderRadius: '8px' },
+          }}
+          w="full"
+          maxW="100%"
+        >
           {isAuthenticated && <AdminNavbar onLogout={handleLogout} />}
-          <main style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1rem', borderRadius: 16, background: '#fff', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' }}>
+          <Box as="main" w="full" maxW="100%" p={0} m={0} bg="transparent">
             {children}
-          </main>
-        </div>
+          </Box>
+        </Box>
       </ChakraProvider>
     </CacheProvider>
   );

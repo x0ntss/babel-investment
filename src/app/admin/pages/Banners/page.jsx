@@ -4,6 +4,7 @@ import {
   Box, Button, Table, Thead, Tbody, Tr, Th, Td, Input, Switch, FormLabel, FormControl, Textarea, IconButton, useToast, Image, Tooltip
 } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon, AddIcon, ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
+import { adminTheme, componentStyles } from '../../theme';
 
 const emptyBanner = {
   imageUrl: '',
@@ -125,7 +126,7 @@ export default function BannersAdmin() {
     <Box p={6}>
       <Button leftIcon={<AddIcon />} colorScheme="blue" mb={4} onClick={() => { setShowForm(true); setForm(emptyBanner); setEditingId(null); setImageFile(null); }}>إضافة بانر</Button>
       {showForm && (
-        <Box as="form" onSubmit={handleSubmit} mb={6} p={4} borderWidth={1} borderRadius="md" bg="white" boxShadow="md">
+        <Box as="form" onSubmit={handleSubmit} mb={6} p={4} borderWidth={1} borderRadius="md" bg={adminTheme.colors.background.card} boxShadow="md">
           <FormControl mb={2}>
             <FormLabel>الصورة</FormLabel>
             <Input name="imageFile" type="file" accept="image/*" onChange={handleChange} />
@@ -155,7 +156,7 @@ export default function BannersAdmin() {
           <Button onClick={() => { setShowForm(false); setEditingId(null); setForm(emptyBanner); setImageFile(null); }}>إلغاء</Button>
         </Box>
       )}
-      <Table variant="simple" size="md" bg="white" borderRadius="lg" boxShadow="md">
+      <Table variant="simple" size="md" bg={adminTheme.colors.background.card} borderRadius="lg" boxShadow="md">
         <Thead>
           <Tr>
             <Th>الصورة</Th>

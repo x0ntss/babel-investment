@@ -37,9 +37,15 @@ const Transactions = () => {
   };
 
   return (
-    <Box p={8} dir="rtl">
-      <Heading size="lg" mb={4}>إدارة المعاملات</Heading>
-      {loading ? <Spinner /> : error ? <Text color="red.500">{error}</Text> : <TransactionTable transactions={transactions} onReview={handleReview} actionLoading={actionLoading} rtl />}
+    <Box px={{ base: 2, md: 4, lg: 8 }} py={{ base: 4, md: 8, lg: 12 }} bg="gray.900" minH="100vh" w="full" maxW="100%" dir="rtl">
+      <Heading size="lg" mb={4} color="white">
+        إدارة المعاملات
+      </Heading>
+      <Box overflowX="auto" w="full" maxW="100%">
+        <TransactionTable transactions={transactions} onReview={handleReview} actionLoading={actionLoading} rtl tableFontSize={{ base: 'xs', md: 'sm', lg: 'md' }} />
+      </Box>
+      {loading && <Spinner color="blue.400" />}
+      {error && <Text color="red.400">{error}</Text>}
     </Box>
   );
 };

@@ -32,16 +32,22 @@ const AdminLogin = ({ onLogin }) => {
   };
 
   return (
-    <Box maxW="sm" mx="auto" mt={24} p={8} borderWidth={1} borderRadius="lg" boxShadow="lg" bg="white" dir="rtl">
+    <Box maxW="sm" mx="auto" mt={24} p={8} bg="gray.800" borderRadius="lg" boxShadow="md" dir="rtl">
       <VStack as="form" spacing={6} onSubmit={handleSubmit} align="stretch">
-        <Heading size="lg" color="brand.700" textAlign="center" fontFamily="Tajawal, Cairo, Arial, sans-serif">تسجيل دخول الإدارة</Heading>
+        <Heading size="lg" color="white" textAlign="center">
+          تسجيل دخول الإدارة
+        </Heading>
         {error && <Alert status="error" fontSize="md" borderRadius="md">{error}</Alert>}
         <FormControl id="email" isRequired>
-          <FormLabel fontWeight="bold">البريد الإلكتروني</FormLabel>
-          <Input type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="أدخل البريد الإلكتروني" textAlign="right" fontFamily="inherit" />
+          <FormLabel fontWeight="bold" color="white">
+            البريد الإلكتروني
+          </FormLabel>
+          <Input type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="أدخل البريد الإلكتروني" textAlign="right" fontFamily="inherit" bg="gray.700" color="white" borderRadius="lg" boxShadow="md" _placeholder={{ color: 'gray.400' }} />
         </FormControl>
         <FormControl id="password" isRequired>
-          <FormLabel fontWeight="bold">كلمة المرور</FormLabel>
+          <FormLabel fontWeight="bold" color="white">
+            كلمة المرور
+          </FormLabel>
           <InputGroup>
             <Input
               type={showPassword ? 'text' : 'password'}
@@ -50,6 +56,11 @@ const AdminLogin = ({ onLogin }) => {
               placeholder="أدخل كلمة المرور"
               textAlign="right"
               fontFamily="inherit"
+              bg="gray.700"
+              color="white"
+              borderRadius="lg"
+              boxShadow="md"
+              _placeholder={{ color: 'gray.400' }}
             />
             <InputRightElement>
               <IconButton
@@ -62,10 +73,10 @@ const AdminLogin = ({ onLogin }) => {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button type="submit" colorScheme="teal" isLoading={loading} width="full" fontWeight="bold" fontSize="lg">
+        <Button type="submit" width="full" fontWeight="bold" fontSize="lg" colorScheme="blue" boxShadow="md" isLoading={loading}>
           دخول
         </Button>
-        <Text color="gray.500" fontSize="sm" textAlign="center">
+        <Text color="gray.400" fontSize="sm" textAlign="center">
           للاستخدام الإداري فقط
         </Text>
       </VStack>

@@ -195,7 +195,7 @@ const AccountPage = () => {
         </Card>
 
         {/* Stats Grid */}
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
+        <SimpleGrid columns={{ base: 2, md: 2, lg: 4 }} spacing={6}>
           {/* Daily Income */}
           <Card bg="brand.glass" border="1px solid" borderColor="brand.glassBorder">
             <CardBody>

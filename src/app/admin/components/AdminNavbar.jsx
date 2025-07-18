@@ -21,7 +21,7 @@ import {
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { componentStyles } from '../theme';
+import { componentStyles, adminTheme } from '../theme';
 
 const AdminNavbar = ({ onLogout }) => {
   const pathname = usePathname();
@@ -61,18 +61,27 @@ const AdminNavbar = ({ onLogout }) => {
       <Box 
         {...componentStyles.adminNavbar}
         display={{ base: 'none', md: 'block' }}
+        bg={adminTheme.colors.background[900]}
+        boxShadow={adminTheme.shadows.md}
+        borderBottom="1px solid"
+        borderColor={adminTheme.colors.background.cardBorder}
+        fontFamily={adminTheme.fonts.heading}
       >
         <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
-          <Heading size="md" color="white">لوحة تحكم الإدارة</Heading>
+          <Heading size="md" color={adminTheme.colors.text.heading} fontFamily={adminTheme.fonts.heading} letterSpacing="wider">
+            لوحة تحكم الإدارة
+          </Heading>
           <Flex gap={6} align="center">
             {navItems.map((item) => (
               <NavLink key={item.href} href={item.href} label={item.label} />
             ))}
             <Button 
-              colorScheme="red" 
+              colorScheme="blue" 
               size="sm" 
               onClick={onLogout}
               {...componentStyles.adminButton}
+              bg={adminTheme.colors.background.accent}
+              boxShadow={adminTheme.shadows.md}
             >
               تسجيل الخروج
             </Button>
@@ -84,14 +93,21 @@ const AdminNavbar = ({ onLogout }) => {
       <Box 
         {...componentStyles.adminNavbar}
         display={{ base: 'block', md: 'none' }}
+        bg={adminTheme.colors.background[900]}
+        boxShadow={adminTheme.shadows.md}
+        borderBottom="1px solid"
+        borderColor={adminTheme.colors.background.cardBorder}
+        fontFamily={adminTheme.fonts.heading}
       >
         <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
-          <Heading size="md" color="white">لوحة تحكم الإدارة</Heading>
+          <Heading size="md" color={adminTheme.colors.text.heading} fontFamily={adminTheme.fonts.heading} letterSpacing="wider">
+            لوحة تحكم الإدارة
+          </Heading>
           <HStack spacing={2}>
             <IconButton
               icon={<HamburgerIcon />}
               variant="ghost"
-              color="white"
+              color={adminTheme.colors.text.heading}
               onClick={onOpen}
               aria-label="Open menu"
               size="sm"
@@ -103,9 +119,9 @@ const AdminNavbar = ({ onLogout }) => {
       {/* Mobile Drawer */}
       <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="xs">
         <DrawerOverlay />
-        <DrawerContent bg="gray.800" color="white">
-          <DrawerCloseButton color="white" />
-          <DrawerHeader borderBottomWidth="1px" borderColor="gray.700">
+        <DrawerContent bg={adminTheme.colors.background[800]} color={adminTheme.colors.text.main} boxShadow={adminTheme.shadows.md}>
+          <DrawerCloseButton color={adminTheme.colors.text.main} />
+          <DrawerHeader borderBottomWidth="1px" borderColor={adminTheme.colors.background.cardBorder} fontFamily={adminTheme.fonts.heading}>
             <Text fontSize="lg" fontWeight="bold">لوحة تحكم الإدارة</Text>
           </DrawerHeader>
           <DrawerBody pt={6}>
@@ -114,13 +130,15 @@ const AdminNavbar = ({ onLogout }) => {
                 <NavLink key={item.href} href={item.href} label={item.label} isMobile={true} />
               ))}
               <Button 
-                colorScheme="red" 
+                colorScheme="blue" 
                 size="sm" 
                 onClick={() => {
                   onLogout();
                   onClose();
                 }}
                 {...componentStyles.adminButton}
+                bg={adminTheme.colors.background.accent}
+                boxShadow={adminTheme.shadows.md}
                 w="full"
                 mt={4}
               >
