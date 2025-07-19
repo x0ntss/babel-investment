@@ -88,6 +88,26 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
     }
   };
 
+  // Determine dynamic columns from the first transaction
+  const excludedKeys = ['__v', '_id'];
+  const keyTranslations = {
+    username: 'اسم المستخدم',
+    type: 'النوع',
+    amount: 'المبلغ',
+    status: 'الحالة',
+    walletAddress: 'المحفظة',
+    proofImage: 'الإثبات',
+    createdAt: 'تاريخ الإنشاء',
+    updatedAt: 'تاريخ التحديث',
+    email: 'البريد الإلكتروني',
+    userId: 'معرّف المستخدم',
+  };
+  const dynamicKeys = safeTransactions.length > 0
+    ? Object.keys(safeTransactions[0]).filter(
+        k => !excludedKeys.includes(k)
+      )
+    : [];
+
   return (
     <Box dir={rtl ? "rtl" : undefined} overflowX="auto" w="full" maxW="100%">
       <Table 
@@ -102,12 +122,11 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
       >
         <Thead bg="gray.700">
           <Tr>
-            <Th color="gray.300" fontSize={fontSize}>اسم المستخدم</Th>
-            <Th color="gray.300" fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>النوع</Th>
-            <Th color="gray.300" fontSize={fontSize}>المبلغ</Th>
-            <Th color="gray.300" fontSize={fontSize}>الحالة</Th>
-            <Th color="gray.300" fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>المحفظة</Th>
-            <Th color="gray.300" fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>الإثبات</Th>
+            {dynamicKeys.map(key => (
+              <Th key={key} color="gray.300" fontSize={fontSize}>
+                {keyTranslations[key] || key}
+              </Th>
+            ))}
             <Th color="gray.300" fontSize={fontSize}>إجراءات</Th>
           </Tr>
         </Thead>
@@ -115,65 +134,99 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
           {safeTransactions.length > 0 ? (
             safeTransactions.map((transaction, idx) => (
               <Tr key={transaction._id || idx} _hover={{ bg: bgHover }}>
-                <Td fontWeight="medium" color={textColor} fontSize={fontSize} maxW={{ base: '80px', md: '160px' }} isTruncated>
-                  <Tooltip label={transaction?.username || 'Unknown User'}>
-                    {transaction?.username || 'Unknown User'}
-                  </Tooltip>
-                </Td>
-                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
-                  <Badge colorScheme={getTypeColor(transaction?.type)} variant="subtle">
-                    {transaction?.type === 'deposit' ? 'Dep' : transaction?.type === 'withdrawal' ? 'Wdr' : transaction?.type || 'Unknown'}
-                  </Badge>
-                </Td>
-                <Td fontSize={fontSize} color={textColor} maxW={{ base: '60px', md: '100px' }} isTruncated>
-                  <Text fontWeight="bold" color="blue.400" fontSize={fontSize}>
-                    {transaction?.amount || 0}
-                  </Text>
-                </Td>
-                <Td fontSize={fontSize} color={textColor}>
-                  <Badge colorScheme={getStatusColor(transaction?.status)} variant="subtle">
-                    {transaction?.status === 'pending' ? 'Pending' :
-                     transaction?.status === 'completed' ? 'Done' :
-                     transaction?.status === 'rejected' ? 'Rejected' : transaction?.status || 'Unknown'}
-                  </Badge>
-                </Td>
-                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }} maxW="120px" isTruncated>
-                  {transaction?.type === 'withdrawal' && transaction?.walletAddress ? (
-                    <Tooltip label={transaction.walletAddress} placement="top">
-                      <Text 
-                        fontSize={fontSize}
-                        fontFamily="mono" 
-                        color="green.300"
-                        cursor="pointer"
-                        maxW="120px"
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                        whiteSpace="nowrap"
-                      >
-                        {formatWalletAddress(transaction.walletAddress)}
-                      </Text>
-                    </Tooltip>
-                  ) : (
-                    <Text color="gray.400" fontSize={fontSize}>-</Text>
-                  )}
-                </Td>
-                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
-                  {transaction?.type === 'deposit' && transaction?.proofImage ? (
-                    <Image
-                      src={getImageUrl(transaction.proofImage)}
-                      alt="Proof"
-                      boxSize="36px"
-                      objectFit="cover"
-                      borderRadius="md"
-                      cursor="pointer"
-                      onClick={() => handleImageClick(getImageUrl(transaction.proofImage))}
-                      _hover={{ transform: 'scale(1.05)' }}
-                      transition="transform 0.2s"
-                    />
-                  ) : (
-                    <Text color="gray.400" fontSize={fontSize}>-</Text>
-                  )}
-                </Td>
+                {dynamicKeys.map(key => {
+                  // Special rendering for known fields
+                  if (key === 'username') {
+                    return (
+                      <Td key={key} fontWeight="medium" color={textColor} fontSize={fontSize} maxW={{ base: '80px', md: '160px' }} isTruncated>
+                        <Tooltip label={transaction?.username || 'Unknown User'}>
+                          {transaction?.username || 'Unknown User'}
+                        </Tooltip>
+                      </Td>
+                    );
+                  }
+                  if (key === 'type') {
+                    return (
+                      <Td key={key} fontSize={fontSize} color={textColor}>
+                        <Badge colorScheme={getTypeColor(transaction?.type)} variant="subtle">
+                          {transaction?.type === 'deposit' ? 'Dep' : transaction?.type === 'withdrawal' ? 'Wdr' : transaction?.type || 'Unknown'}
+                        </Badge>
+                      </Td>
+                    );
+                  }
+                  if (key === 'amount') {
+                    return (
+                      <Td key={key} fontSize={fontSize} color={textColor} maxW={{ base: '60px', md: '100px' }} isTruncated>
+                        <Text fontWeight="bold" color="blue.400" fontSize={fontSize}>
+                          {transaction?.amount || 0}
+                        </Text>
+                      </Td>
+                    );
+                  }
+                  if (key === 'status') {
+                    return (
+                      <Td key={key} fontSize={fontSize} color={textColor}>
+                        <Badge colorScheme={getStatusColor(transaction?.status)} variant="subtle">
+                          {transaction?.status === 'pending' ? 'Pending' :
+                            transaction?.status === 'completed' ? 'Done' :
+                            transaction?.status === 'rejected' ? 'Rejected' : transaction?.status || 'Unknown'}
+                        </Badge>
+                      </Td>
+                    );
+                  }
+                  if (key === 'walletAddress') {
+                    return (
+                      <Td key={key} fontSize={fontSize} color={textColor} maxW="120px" isTruncated>
+                        {transaction?.walletAddress ? (
+                          <Tooltip label={transaction.walletAddress} placement="top">
+                            <Text 
+                              fontSize={fontSize}
+                              fontFamily="mono" 
+                              color="green.300"
+                              cursor="pointer"
+                              maxW="120px"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
+                              whiteSpace="nowrap"
+                            >
+                              {formatWalletAddress(transaction.walletAddress)}
+                            </Text>
+                          </Tooltip>
+                        ) : (
+                          <Text color="gray.400" fontSize={fontSize}>-</Text>
+                        )}
+                      </Td>
+                    );
+                  }
+                  if (key === 'proofImage') {
+                    return (
+                      <Td key={key} fontSize={fontSize} color={textColor}>
+                        {transaction?.proofImage ? (
+                          <Image
+                            src={getImageUrl(transaction.proofImage)}
+                            alt="Proof"
+                            boxSize="36px"
+                            objectFit="cover"
+                            borderRadius="md"
+                            cursor="pointer"
+                            onClick={() => handleImageClick(getImageUrl(transaction.proofImage))}
+                            _hover={{ transform: 'scale(1.05)' }}
+                            transition="transform 0.2s"
+                          />
+                        ) : (
+                          <Text color="gray.400" fontSize={fontSize}>-</Text>
+                        )}
+                      </Td>
+                    );
+                  }
+                  // Default rendering
+                  return (
+                    <Td key={key} fontSize={fontSize} color={textColor}>
+                      {transaction[key] !== undefined && transaction[key] !== null ? String(transaction[key]) : '-'}
+                    </Td>
+                  );
+                })}
+                {/* Actions column */}
                 <Td fontSize={fontSize} color={textColor}>
                   {transaction?.status === 'pending' ? (
                     isMobile ? (
@@ -226,7 +279,7 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
             ))
           ) : (
             <Tr>
-              <Td colSpan={7} fontSize={fontSize} color={textColor}>
+              <Td colSpan={dynamicKeys.length + 1} fontSize={fontSize} color={textColor}>
                 <Text textAlign="center" color="gray.500" py={8} fontSize={fontSize}>
                   No transactions found.
                 </Text>
