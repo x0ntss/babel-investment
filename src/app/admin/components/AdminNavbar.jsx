@@ -28,10 +28,10 @@ const AdminNavbar = ({ onLogout }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   
   const navItems = [
-    { href: '/admin/dashboard', label: 'لوحة التحكم' },
-    { href: '/admin/users', label: 'المستخدمون' },
-    { href: '/admin/transactions', label: 'المعاملات' },
-    { href: '/admin/pages/Banners', label: 'الاعلانات' },
+    { href: '/admin/dashboard', label: 'Dashboard' },
+    { href: '/admin/users', label: 'Users' },
+    { href: '/admin/transactions', label: 'Transactions' },
+    { href: '/admin/pages/Banners', label: 'Banners' },
   ];
 
   const isActive = (href) => pathname === href;
@@ -69,7 +69,7 @@ const AdminNavbar = ({ onLogout }) => {
       >
         <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
           <Heading size="md" color={adminTheme.colors.text.heading} fontFamily={adminTheme.fonts.heading} letterSpacing="wider">
-            لوحة تحكم الإدارة
+            Admin Dashboard
           </Heading>
           <Flex gap={6} align="center">
             {navItems.map((item) => (
@@ -83,7 +83,7 @@ const AdminNavbar = ({ onLogout }) => {
               bg={adminTheme.colors.background.accent}
               boxShadow={adminTheme.shadows.md}
             >
-              تسجيل الخروج
+              Logout
             </Button>
           </Flex>
         </Flex>
@@ -101,7 +101,7 @@ const AdminNavbar = ({ onLogout }) => {
       >
         <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
           <Heading size="md" color={adminTheme.colors.text.heading} fontFamily={adminTheme.fonts.heading} letterSpacing="wider">
-            لوحة تحكم الإدارة
+            Admin Dashboard
           </Heading>
           <HStack spacing={2}>
             <IconButton
@@ -122,7 +122,7 @@ const AdminNavbar = ({ onLogout }) => {
         <DrawerContent bg={adminTheme.colors.background[800]} color={adminTheme.colors.text.main} boxShadow={adminTheme.shadows.md}>
           <DrawerCloseButton color={adminTheme.colors.text.main} />
           <DrawerHeader borderBottomWidth="1px" borderColor={adminTheme.colors.background.cardBorder} fontFamily={adminTheme.fonts.heading}>
-            <Text fontSize="lg" fontWeight="bold">لوحة تحكم الإدارة</Text>
+            <Text fontSize="lg" fontWeight="bold">Admin Dashboard</Text>
           </DrawerHeader>
           <DrawerBody pt={6}>
             <VStack spacing={4} align="stretch">
@@ -142,7 +142,7 @@ const AdminNavbar = ({ onLogout }) => {
                 w="full"
                 mt={4}
               >
-                تسجيل الخروج
+                Logout
               </Button>
             </VStack>
           </DrawerBody>

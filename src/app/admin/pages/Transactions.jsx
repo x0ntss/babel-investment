@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Text, Spinner, useToast } from '@chakra-ui/react';
+import { Box, Heading, Text, Spinner, useToast, Container } from '@chakra-ui/react';
 import TransactionTable from '../components/TransactionTable';
 import { getTransactions, reviewTransaction } from '../api/admin';
 
@@ -27,26 +27,46 @@ const Transactions = () => {
     setActionLoading(true);
     try {
       await reviewTransaction(userId, transactionId, status);
-      toast({ title: `Transaction ${status}.`, status: 'success', duration: 2000 });
+      toast({ 
+        title: `Transaction ${status}.`, 
+        status: 'success', 
+        duration: 2000 
+      });
       fetchTransactions();
     } catch (err) {
-      toast({ title: 'Action failed', description: err.message, status: 'error', duration: 3000 });
+      toast({ 
+        title: 'Action failed', 
+        description: err.message, 
+        status: 'error', 
+        duration: 3000 
+      });
     } finally {
       setActionLoading(false);
     }
   };
 
   return (
-    <Box px={{ base: 2, md: 4, lg: 8 }} py={{ base: 4, md: 8, lg: 12 }} bg="gray.900" minH="100vh" w="full" maxW="100%" dir="rtl">
-      <Heading size="lg" mb={4} color="white">
-        إدارة المعاملات
+    <Container maxW="container.xl" py={8}>
+      <Heading size="lg" mb={6}>
+        Transactions Management
       </Heading>
-      <Box overflowX="auto" w="full" maxW="100%">
-        <TransactionTable transactions={transactions} onReview={handleReview} actionLoading={actionLoading} rtl tableFontSize={{ base: 'xs', md: 'sm', lg: 'md' }} />
-      </Box>
-      {loading && <Spinner color="blue.400" />}
-      {error && <Text color="red.400">{error}</Text>}
-    </Box>
+      
+      {loading ? (
+        <Box textAlign="center" py={8}>
+          <Spinner size="lg" color="blue.500" />
+          <Text mt={4} color="gray.600">Loading transactions...</Text>
+        </Box>
+      ) : error ? (
+        <Box textAlign="center" py={8}>
+          <Text color="red.500">{error}</Text>
+        </Box>
+      ) : (
+        <TransactionTable 
+          transactions={transactions} 
+          onReview={handleReview} 
+        />
+      )}
+    </Container>
   );
 };
 
