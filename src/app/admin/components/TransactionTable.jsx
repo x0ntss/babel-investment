@@ -89,17 +89,26 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
   };
 
   return (
-    <Box mt={6} dir={rtl ? "rtl" : undefined} overflowX="auto" w="full" maxW="100%">
-      <Table w="full" maxW="100%" fontSize={fontSize} bg={bgTable}>
-        <Thead bg={bgHeader}>
+    <Box dir={rtl ? "rtl" : undefined} overflowX="auto" w="full" maxW="100%">
+      <Table 
+        variant="simple"
+        size="md"
+        bg="gray.800"
+        borderRadius="lg"
+        boxShadow="md"
+        w="full"
+        maxW="100%"
+        fontSize={fontSize}
+      >
+        <Thead bg="gray.700">
           <Tr>
-            <Th color={secondaryText} fontSize={fontSize}>User</Th>
-            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Type</Th>
-            <Th color={secondaryText} fontSize={fontSize}>Amount</Th>
-            <Th color={secondaryText} fontSize={fontSize}>Status</Th>
-            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Wallet</Th>
-            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Proof</Th>
-            <Th color={secondaryText} fontSize={fontSize}>Actions</Th>
+            <Th color="gray.300" fontSize={fontSize}>اسم المستخدم</Th>
+            <Th color="gray.300" fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>النوع</Th>
+            <Th color="gray.300" fontSize={fontSize}>المبلغ</Th>
+            <Th color="gray.300" fontSize={fontSize}>الحالة</Th>
+            <Th color="gray.300" fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>المحفظة</Th>
+            <Th color="gray.300" fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>الإثبات</Th>
+            <Th color="gray.300" fontSize={fontSize}>إجراءات</Th>
           </Tr>
         </Thead>
         <Tbody>
