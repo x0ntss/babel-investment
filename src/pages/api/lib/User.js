@@ -6,7 +6,9 @@ const transactionSchema = new mongoose.Schema({
   type: { type: String, enum: ['deposit', 'withdrawal', 'reward'], required: true },
   amount: { type: Number, required: true },
   proofImage: { type: String }, // For deposit only
+  walletAddress: { type: String }, // For withdrawal only
   status: { type: String, enum: ['pending', 'completed', 'rejected'], default: 'pending' },
+  rejectionReason: { type: String }, // For rejected transactions
   createdAt: { type: Date, default: Date.now }
 });
 
