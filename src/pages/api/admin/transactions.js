@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     });
 
     // Get all users with their transactions
-    const users = await User.find({}).select('username email transactions').sort({ createdAt: -1 });
+    const users = await User.find({}).select('username email transactions walletAddress').sort({ createdAt: -1 });
     
     // Flatten transactions from all users
     const allTransactions = [];
@@ -29,7 +29,8 @@ export default async function handler(req, res) {
           ...transaction.toObject(),
           username: user.username,
           email: user.email,
-          userId: user._id
+          userId: user._id,
+          walletAddress: user.walletAddress // Include user's wallet address for withdrawal transactions
         });
       });
     });
