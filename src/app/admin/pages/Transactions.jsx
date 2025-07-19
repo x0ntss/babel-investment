@@ -37,15 +37,36 @@ const Transactions = () => {
   };
 
   return (
-    <Box px={{ base: 2, md: 4, lg: 8 }} py={{ base: 4, md: 8, lg: 12 }} bg="gray.900" minH="100vh" w="full" maxW="100%" dir="rtl">
-      <Heading size="lg" mb={4} color="white">
-        إدارة المعاملات
-      </Heading>
+    <Box px={{ base: 2, md: 4, lg: 8 }} py={{ base: 4, md: 8, lg: 12 }} bg="gray.900" minH="100vh" w="full" maxW="100%">
+      <Box
+        bg="gray.800"
+        borderRadius="lg"
+        boxShadow="md"
+        p={{ base: 2, md: 4 }}
+        mb={6}
+        w="full"
+        maxW="100%"
+      >
+        <Heading size="lg" mb={2} color="white" textAlign="right">
+          إدارة المعاملات
+        </Heading>
+        <Text color="gray.400" fontSize="sm" mb={2} textAlign="right">
+          جميع معاملات المستخدمين (إيداع وسحب)
+        </Text>
+      </Box>
       <Box overflowX="auto" w="full" maxW="100%">
         <TransactionTable transactions={transactions} onReview={handleReview} actionLoading={actionLoading} rtl tableFontSize={{ base: 'xs', md: 'sm', lg: 'md' }} />
       </Box>
-      {loading && <Spinner color="blue.400" />}
-      {error && <Text color="red.400">{error}</Text>}
+      {loading && (
+        <Box w="full" textAlign="center" py={8}>
+          <Spinner color="blue.400" size="xl" thickness="4px" />
+        </Box>
+      )}
+      {error && (
+        <Box w="full" textAlign="center" py={8}>
+          <Text color="red.400" fontSize="lg">{error}</Text>
+        </Box>
+      )}
     </Box>
   );
 };
