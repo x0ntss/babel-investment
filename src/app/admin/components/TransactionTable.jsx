@@ -90,45 +90,45 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
 
   return (
     <Box mt={6} dir={rtl ? "rtl" : undefined} overflowX="auto" w="full" maxW="100%">
-      <Table w="full" maxW="100%" fontSize={fontSize} bg={bgTable}>
-        <Thead bg={bgHeader}>
+      <Table w="full" maxW="100%" fontSize={fontSize} bg="gray.800" color="white">
+        <Thead bg="gray.700">
           <Tr>
-            <Th color={secondaryText} fontSize={fontSize}>User</Th>
-            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Type</Th>
-            <Th color={secondaryText} fontSize={fontSize}>Amount</Th>
-            <Th color={secondaryText} fontSize={fontSize}>Status</Th>
-            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Wallet</Th>
-            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>Proof</Th>
-            <Th color={secondaryText} fontSize={fontSize}>Actions</Th>
+            <Th color="gray.300" fontSize={fontSize}>User</Th>
+            <Th color="gray.300" fontSize={fontSize}>Type</Th>
+            <Th color="gray.300" fontSize={fontSize}>Amount</Th>
+            <Th color="gray.300" fontSize={fontSize}>Status</Th>
+            <Th color="gray.300" fontSize={fontSize}>Wallet</Th>
+            <Th color="gray.300" fontSize={fontSize}>Proof</Th>
+            <Th color="gray.300" fontSize={fontSize}>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>
           {safeTransactions.length > 0 ? (
             safeTransactions.map((transaction, idx) => (
-              <Tr key={transaction._id || idx} _hover={{ bg: bgHover }}>
-                <Td fontWeight="medium" color={textColor} fontSize={fontSize} maxW={{ base: '80px', md: '160px' }} isTruncated>
+              <Tr key={transaction._id || idx} _hover={{ bg: 'gray.700' }}>
+                <Td fontWeight="medium" color="white" fontSize={fontSize} maxW={{ base: '80px', md: '160px' }} isTruncated>
                   <Tooltip label={transaction?.username || 'Unknown User'}>
                     {transaction?.username || 'Unknown User'}
                   </Tooltip>
                 </Td>
-                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
+                <Td fontSize={fontSize} color="white">
                   <Badge colorScheme={getTypeColor(transaction?.type)} variant="subtle">
-                    {transaction?.type === 'deposit' ? 'Dep' : transaction?.type === 'withdrawal' ? 'Wdr' : transaction?.type || 'Unknown'}
+                    {transaction?.type === 'deposit' ? 'Deposit' : transaction?.type === 'withdrawal' ? 'Withdraw' : transaction?.type || 'Unknown'}
                   </Badge>
                 </Td>
-                <Td fontSize={fontSize} color={textColor} maxW={{ base: '60px', md: '100px' }} isTruncated>
-                  <Text fontWeight="bold" color="blue.400" fontSize={fontSize}>
+                <Td fontSize={fontSize} color="white" maxW={{ base: '60px', md: '100px' }} isTruncated>
+                  <Text fontWeight="bold" color="blue.300" fontSize={fontSize}>
                     {transaction?.amount || 0}
                   </Text>
                 </Td>
-                <Td fontSize={fontSize} color={textColor}>
+                <Td fontSize={fontSize} color="white">
                   <Badge colorScheme={getStatusColor(transaction?.status)} variant="subtle">
                     {transaction?.status === 'pending' ? 'Pending' :
                      transaction?.status === 'completed' ? 'Done' :
                      transaction?.status === 'rejected' ? 'Rejected' : transaction?.status || 'Unknown'}
                   </Badge>
                 </Td>
-                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }} maxW="120px" isTruncated>
+                <Td fontSize={fontSize} color="white" maxW="120px" isTruncated>
                   {transaction?.type === 'withdrawal' && transaction?.walletAddress ? (
                     <Tooltip label={transaction.walletAddress} placement="top">
                       <Text 
@@ -148,7 +148,7 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
                     <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
-                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
+                <Td fontSize={fontSize} color="white">
                   {transaction?.type === 'deposit' && transaction?.proofImage ? (
                     <Image
                       src={getImageUrl(transaction.proofImage)}
@@ -165,7 +165,7 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
                     <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
-                <Td fontSize={fontSize} color={textColor}>
+                <Td fontSize={fontSize} color="white">
                   {transaction?.status === 'pending' ? (
                     isMobile ? (
                       <Menu>
@@ -217,7 +217,7 @@ const TransactionTable = ({ transactions, onReview, rtl, tableFontSize }) => {
             ))
           ) : (
             <Tr>
-              <Td colSpan={7} fontSize={fontSize} color={textColor}>
+              <Td colSpan={7} fontSize={fontSize} color="white">
                 <Text textAlign="center" color="gray.500" py={8} fontSize={fontSize}>
                   No transactions found.
                 </Text>
