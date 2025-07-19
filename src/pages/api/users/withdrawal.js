@@ -49,6 +49,7 @@ export default async function handler(req, res) {
     user.transactions.push({
       type: 'withdrawal',
       amount: parseFloat(amount),
+      walletAddress: address,
       status: 'pending'
     });
 
