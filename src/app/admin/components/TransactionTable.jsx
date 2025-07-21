@@ -131,7 +131,7 @@ const TransactionTable = ({ transactions, onReview, actionLoading }) => {
         <Thead bg={bgHeader}>
           <Tr>
             <Th color={secondaryText} fontSize={fontSize}>المستخدم</Th>
-            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>النوع</Th>
+            <Th color={secondaryText} fontSize={fontSize}>النوع</Th>
             <Th color={secondaryText} fontSize={fontSize}>المبلغ</Th>
             <Th color={secondaryText} fontSize={fontSize}>الحالة</Th>
             <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>المحفظة</Th>
@@ -148,14 +148,14 @@ const TransactionTable = ({ transactions, onReview, actionLoading }) => {
                     {transaction?.username || 'مستخدم غير معروف'}
                   </Tooltip>
                 </Td>
-                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
+                <Td fontSize={fontSize} color={textColor}>
                   <Badge colorScheme={getTypeColor(transaction?.type)} variant="subtle">
-                    {transaction?.type === 'deposit' ? 'إيداع' : transaction?.type === 'withdrawal' ? 'سحب' : transaction?.type || 'غير معروف'}
+                    {transaction?.type === 'deposit' ? 'إيداع' : transaction?.type === 'withdrawal' ? 'سحب' : transaction?.type === 'reward' ? 'مكافأة' : transaction?.type || 'غير معروف'}
                   </Badge>
                 </Td>
                 <Td fontSize={fontSize} color={textColor} maxW={{ base: '60px', md: '100px' }} isTruncated>
                   <Text fontWeight="bold" color="blue.400" fontSize={fontSize}>
-                    {transaction?.amount || 0}
+                    {typeof transaction?.amount === 'number' ? transaction.amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 }) : 0}
                   </Text>
                 </Td>
                 <Td fontSize={fontSize} color={textColor}>

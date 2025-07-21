@@ -116,7 +116,7 @@ export default function UsersAdmin() {
         maxW="100%"
       />
       <Box overflowX="auto" w="full" maxW="100%">
-        <Table variant="simple" size="md" bg="gray.800" borderRadius="lg" boxShadow="md" w="full" maxW="100%" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
+        <Table variant="simple" size="sm" bg="gray.800" borderRadius="lg" boxShadow="md" w="full" maxW="100%" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
           <Thead bg="gray.700">
             <Tr>
               <Th color="gray.300" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>اسم المستخدم</Th>
@@ -130,26 +130,38 @@ export default function UsersAdmin() {
           </Thead>
           <Tbody>
             {Array.isArray(users) && users.filter(u => u.username.includes(search) || u.email.includes(search)).map(user => (
-              <Tr key={user._id} _hover={{ bg: 'gray.700' }}>
-                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.username}</Td>
-                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.email}</Td>
-                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.phone}</Td>
-                <Td fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
-                  <Tooltip label="نسخ العنوان" aria-label="نسخ العنوان">
-                    <Button variant="ghost" size="sm" onClick={() => handleCopy(user.walletAddress)} rightIcon={<CopyIcon />} color="blue.400">
-                      {user.walletAddress}
+              <Tr key={user._id} _hover={{ bg: 'gray.700', cursor: 'pointer' }} onClick={() => router.push(`/admin/users/${user._id}`)}>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }} maxW={{ base: '80px', md: '160px' }} isTruncated>
+                  <Tooltip label={user.username}>{user.username}</Tooltip>
+                </Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }} maxW={{ base: '100px', md: '180px' }} isTruncated>
+                  <Tooltip label={user.email}>{user.email}</Tooltip>
+                </Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }} maxW={{ base: '80px', md: '120px' }} isTruncated>
+                  <Tooltip label={user.phone}>{user.phone}</Tooltip>
+                </Td>
+                <Td fontSize={{ base: 'xs', md: 'sm', lg: 'md' }} maxW={{ base: '100px', md: '180px' }} isTruncated>
+                  <Tooltip label={user.walletAddress} aria-label="نسخ العنوان">
+                    <Button variant="ghost" size="xs" onClick={e => { e.stopPropagation(); handleCopy(user.walletAddress); }} rightIcon={<CopyIcon />} color="blue.400" maxW="100%" overflow="hidden" textOverflow="ellipsis">
+                      <Box as="span" display="inline-block" maxW="100%" overflow="hidden" textOverflow="ellipsis">
+                        <span title={user.walletAddress}>{user.walletAddress}</span>
+                      </Box>
                     </Button>
                   </Tooltip>
                 </Td>
-                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.balance}</Td>
-                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>{user.referralCode}</Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
+                  {typeof user.balance === 'number' ? user.balance.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 }) : user.balance}
+                </Td>
+                <Td color="white" fontSize={{ base: 'xs', md: 'sm', lg: 'md' }} maxW={{ base: '80px', md: '120px' }} isTruncated>
+                  <Tooltip label={user.referralCode}>{user.referralCode}</Tooltip>
+                </Td>
                 <Td fontSize={{ base: 'xs', md: 'sm', lg: 'md' }}>
                   <HStack spacing={1}>
                     <Tooltip label="إضافة رصيد">
-                      <IconButton icon={<AddIcon />} size="sm" colorScheme="green" onClick={() => openBalanceModal(user, 'add')} boxShadow="md" />
+                      <IconButton icon={<AddIcon />} size="xs" colorScheme="green" onClick={e => { e.stopPropagation(); openBalanceModal(user, 'add'); }} boxShadow="md" />
                     </Tooltip>
                     <Tooltip label="خصم رصيد">
-                      <IconButton icon={<MinusIcon />} size="sm" colorScheme="red" onClick={() => openBalanceModal(user, 'subtract')} boxShadow="md" />
+                      <IconButton icon={<MinusIcon />} size="xs" colorScheme="red" onClick={e => { e.stopPropagation(); openBalanceModal(user, 'subtract'); }} boxShadow="md" />
                     </Tooltip>
                   </HStack>
                 </Td>
