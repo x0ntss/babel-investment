@@ -40,7 +40,10 @@ const TransactionTable = ({ transactions, onReview, actionLoading }) => {
   
   const bgTable = useColorModeValue('gray.100', 'gray.800');
   const bgHeader = useColorModeValue('gray.200', 'gray.700');
+  const bgHover = useColorModeValue('gray.300', 'gray.700');
   const textColor = useColorModeValue('black', 'white');
+  const secondaryText = useColorModeValue('gray.700', 'gray.300');
+  const fontSize = { base: 'xs', md: 'sm', lg: 'md' };
 
   // Safety check for transactions data
   const safeTransactions = Array.isArray(transactions) ? transactions : [];
@@ -123,72 +126,50 @@ const TransactionTable = ({ transactions, onReview, actionLoading }) => {
   };
 
   return (
-    <Box w="100%" overflowX="auto" mt={6}>
-      <Table variant="simple" size="sm" minW="800px">
+    <Box mt={6} dir={ "rtl"  } overflowX="auto" w="full" maxW="100%">
+      <Table w="full" maxW="100%" fontSize={fontSize} bg={bgTable}>
         <Thead bg={bgHeader}>
           <Tr>
-            <Th>User</Th>
-            <Th>Type</Th>
-            <Th>Amount</Th>
-            <Th>Status</Th>
-            <Th>Date</Th>
-            <Th>Wallet</Th>
-            <Th>Proof</Th>
-            <Th>Actions</Th>
+            <Th color={secondaryText} fontSize={fontSize}>المستخدم</Th>
+            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>النوع</Th>
+            <Th color={secondaryText} fontSize={fontSize}>المبلغ</Th>
+            <Th color={secondaryText} fontSize={fontSize}>الحالة</Th>
+            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>المحفظة</Th>
+            <Th color={secondaryText} fontSize={fontSize} display={{ base: 'none', md: 'table-cell' }}>الإثبات</Th>
+            <Th color={secondaryText} fontSize={fontSize}>إجراءات</Th>
           </Tr>
         </Thead>
-        <Tbody bg={bgTable} color={textColor}>
+        <Tbody>
           {safeTransactions.length > 0 ? (
             safeTransactions.map((transaction, idx) => (
-              <Tr key={transaction._id || idx}>
-                <Td>
-                  <Tooltip label={transaction?.username || 'Unknown User'}>
-                    <Text fontSize="xs" isTruncated maxW="100px">
-                      {transaction?.username || 'Unknown User'}
-                    </Text>
+              <Tr key={transaction._id || idx} _hover={{ bg: bgHover }}>
+                <Td fontWeight="medium" color={textColor} fontSize={fontSize} maxW={{ base: '80px', md: '160px' }} isTruncated>
+                  <Tooltip label={transaction?.username || 'مستخدم غير معروف'}>
+                    {transaction?.username || 'مستخدم غير معروف'}
                   </Tooltip>
                 </Td>
-                <Td>
-                  <Badge colorScheme={getTypeColor(transaction?.type)} fontSize="xs">
-                    {transaction?.type === 'deposit' ? 'Deposit' : 
-                     transaction?.type === 'withdrawal' ? 'Withdrawal' : 
-                     transaction?.type === 'reward' ? 'Reward' : 
-                     transaction?.type || 'Unknown'}
+                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
+                  <Badge colorScheme={getTypeColor(transaction?.type)} variant="subtle">
+                    {transaction?.type === 'deposit' ? 'إيداع' : transaction?.type === 'withdrawal' ? 'سحب' : transaction?.type || 'غير معروف'}
                   </Badge>
                 </Td>
-                <Td>
-                  <Text fontWeight="bold" color="blue.400" fontSize="xs">
+                <Td fontSize={fontSize} color={textColor} maxW={{ base: '60px', md: '100px' }} isTruncated>
+                  <Text fontWeight="bold" color="blue.400" fontSize={fontSize}>
                     {transaction?.amount || 0}
                   </Text>
                 </Td>
-                <Td>
-                  <Tooltip 
-                    label={transaction?.status === 'rejected' && transaction?.rejectionReason ? 
-                      `Rejection Reason: ${transaction.rejectionReason}` : 
-                      transaction?.status === 'pending' ? 'Awaiting admin review' :
-                      transaction?.status === 'completed' ? 'Transaction completed successfully' :
-                      'Unknown status'
-                    }
-                    placement="top"
-                  >
-                    <Badge colorScheme={getStatusColor(transaction?.status)} fontSize="xs">
-                      {transaction?.status === 'pending' ? 'Pending' :
-                       transaction?.status === 'completed' ? 'Completed' :
-                       transaction?.status === 'rejected' ? 'Rejected' : 
-                       transaction?.status || 'Unknown'}
-                    </Badge>
-                  </Tooltip>
+                <Td fontSize={fontSize} color={textColor}>
+                  <Badge colorScheme={getStatusColor(transaction?.status)} variant="subtle">
+                    {transaction?.status === 'pending' ? 'قيد المراجعة' :
+                     transaction?.status === 'completed' ? 'تمت الموافقة' :
+                     transaction?.status === 'rejected' ? 'مرفوض' : transaction?.status || 'غير معروف'}
+                  </Badge>
                 </Td>
-                <Td>
-                  <Text fontSize="xs">
-                    {formatDate(transaction?.createdAt)}
-                  </Text>
-                </Td>
-                <Td>
+                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }} maxW="120px" isTruncated>
                   {transaction?.type === 'withdrawal' && transaction?.walletAddress ? (
                     <Tooltip label={transaction.walletAddress} placement="top">
                       <Text 
-                        fontSize="xs"
+                        fontSize={fontSize}
                         fontFamily="mono" 
                         color="green.300"
                         cursor="pointer"
@@ -201,15 +182,15 @@ const TransactionTable = ({ transactions, onReview, actionLoading }) => {
                       </Text>
                     </Tooltip>
                   ) : (
-                    <Text color="gray.400" fontSize="xs">-</Text>
+                    <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
-                <Td>
+                <Td fontSize={fontSize} color={textColor} display={{ base: 'none', md: 'table-cell' }}>
                   {transaction?.type === 'deposit' && transaction?.proofImage ? (
                     <Image
                       src={getImageUrl(transaction.proofImage)}
-                      alt="Proof"
-                      boxSize="32px"
+                      alt="الإثبات"
+                      boxSize="36px"
                       objectFit="cover"
                       borderRadius="md"
                       cursor="pointer"
@@ -218,45 +199,65 @@ const TransactionTable = ({ transactions, onReview, actionLoading }) => {
                       transition="transform 0.2s"
                     />
                   ) : (
-                    <Text color="gray.400" fontSize="xs">-</Text>
+                    <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
-                <Td>
+                <Td fontSize={fontSize} color={textColor}>
                   {transaction?.status === 'pending' ? (
-                    <HStack spacing={1}>
-                      <Button
-                        size="xs"
-                        colorScheme="green"
-                        onClick={() => onReview(transaction?.userId, transaction?._id, 'completed')}
-                        isLoading={actionLoading}
-                        loadingText="..."
-                      >
-                        Approve
-                      </Button>
+                    isMobile ? (
                       <Menu>
-                        <MenuButton as={Button} size="xs" colorScheme="red">
-                          Reject
+                        <MenuButton 
+                          as={Button} 
+                          size="sm" 
+                          rightIcon={<ChevronDownIcon />}
+                        >
+                          ...
                         </MenuButton>
                         <MenuList>
                           <MenuItem 
-                            onClick={() => handleRejectClick(transaction)}
-                            color="red.400"
+                            onClick={() => onReview(transaction?.userId, transaction?._id, 'completed')}
+                            color="green.300"
                           >
-                            Reject Transaction
+                            موافقة
+                          </MenuItem>
+                          <MenuItem 
+                            onClick={() => onReview(transaction?.userId, transaction?._id, 'rejected')}
+                            color="red.300"
+                          >
+                            رفض
                           </MenuItem>
                         </MenuList>
                       </Menu>
-                    </HStack>
+                    ) : (
+                      <HStack spacing={2}>
+                        <Button 
+                          colorScheme="green" 
+                          size="sm" 
+                          onClick={() => onReview(transaction?.userId, transaction?._id, 'completed')}
+                        >
+                          موافقة
+                        </Button>
+                        <Button 
+                          colorScheme="red" 
+                          size="sm" 
+                          onClick={() => onReview(transaction?.userId, transaction?._id, 'rejected')}
+                        >
+                          رفض
+                        </Button>
+                      </HStack>
+                    )
                   ) : (
-                    <Text color="gray.400" fontSize="xs">-</Text>
+                    <Text color="gray.400" fontSize={fontSize}>-</Text>
                   )}
                 </Td>
               </Tr>
             ))
           ) : (
             <Tr>
-              <Td colSpan={8} textAlign="center" py={4} fontSize="sm" color="gray.500">
-                No transactions found.
+              <Td colSpan={7} fontSize={fontSize} color={textColor}>
+                <Text textAlign="center" color="gray.500" py={8} fontSize={fontSize}>
+                  لا توجد معاملات.
+                </Text>
               </Td>
             </Tr>
           )}

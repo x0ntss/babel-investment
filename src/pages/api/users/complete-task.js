@@ -22,6 +22,11 @@ export default async function handler(req, res) {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    // Prevent completing task if balance is zero or less
+    if (!user.balance || user.balance <= 0) {
+      return res.status(400).json({ message: 'يجب عليك الايداع أولا لإكمال المهمة' });
+    }
     
     const now = new Date();
     const today = new Date();

@@ -63,7 +63,7 @@ export default function UsersAdmin() {
 
   const openBalanceModal = (user, action) => {
     setSelectedUser(user);
-    setBalanceAction(action);
+    setBalanceAction(action === 'deduct' ? 'subtract' : action);
     setAmount('');
     onOpen();
   };
@@ -149,7 +149,7 @@ export default function UsersAdmin() {
                       <IconButton icon={<AddIcon />} size="sm" colorScheme="green" onClick={() => openBalanceModal(user, 'add')} boxShadow="md" />
                     </Tooltip>
                     <Tooltip label="خصم رصيد">
-                      <IconButton icon={<MinusIcon />} size="sm" colorScheme="red" onClick={() => openBalanceModal(user, 'deduct')} boxShadow="md" />
+                      <IconButton icon={<MinusIcon />} size="sm" colorScheme="red" onClick={() => openBalanceModal(user, 'subtract')} boxShadow="md" />
                     </Tooltip>
                   </HStack>
                 </Td>

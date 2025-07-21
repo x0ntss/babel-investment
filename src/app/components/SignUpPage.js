@@ -35,13 +35,21 @@ export default function SignUpPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [referralCode, setReferralCode] = useState("");
+  const [referralCodeLocked, setReferralCodeLocked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const codeFromUrl = getQueryParam("code", searchParams);
-    if (codeFromUrl) setReferralCode(codeFromUrl);
+    if (codeFromUrl) {
+      setReferralCode(codeFromUrl);
+      setReferralCodeLocked(true);
+      // If not already on /signup, redirect
+      if (window && window.location.pathname !== "/signup") {
+        window.location.href = `/signup?code=${codeFromUrl}`;
+      }
+    }
   }, [searchParams]);
 
   const handleSignUp = async () => {
@@ -246,6 +254,7 @@ export default function SignUpPage() {
                     _hover={{
                       borderColor: "rgba(255, 255, 255, 0.3)",
                     }}
+                    readOnly={referralCodeLocked}
                   />
                 </InputGroup>
               </VStack>
