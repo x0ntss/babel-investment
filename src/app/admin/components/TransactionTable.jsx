@@ -32,12 +32,14 @@ import {
   FormLabel
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { useMediaQuery } from '@chakra-ui/react';
 
 const TransactionTable = ({ transactions, onReview, actionLoading }) => {
   const [modalImage, setModalImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rejectionModal, setRejectionModal] = useState({ isOpen: false, transaction: null, reason: '' });
-  
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
+
   const bgTable = useColorModeValue('gray.100', 'gray.800');
   const bgHeader = useColorModeValue('gray.200', 'gray.700');
   const bgHover = useColorModeValue('gray.300', 'gray.700');
