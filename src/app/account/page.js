@@ -127,53 +127,61 @@ const AccountPage = () => {
           </Text>
         </Box>
 
-        <Card
-          bg="linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)"
+       <Card
+  bg="linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)"
+  border="2px solid"
+  borderColor="brand.primary"
+  boxShadow="0 0 30px rgba(99, 102, 241, 0.2)"
+  className="glow"
+>
+  <CardBody p={8}>
+    <Flex
+      direction={{ base: "column", md: "row" }}
+      align={{ base: "center", md: "center" }}
+      justify={{ base: "center", md: "space-between" }}
+      textAlign={{ base: "center", md: "left" }}
+    >
+      <VStack spacing={4} align={{ base: "center", md: "start" }}>
+        {/* Avatar */}
+        <Box
+          bg="brand.glass"
           border="2px solid"
-          borderColor="brand.primary"
-          boxShadow="0 0 30px rgba(99, 102, 241, 0.2)"
+          borderColor="brand.neonBlue"
+          color="white"
+          fontWeight="bold"
+          fontSize="2xl"
+          borderRadius="50%"
+          w="64px"
+          h="64px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          boxShadow="0 0 16px var(--chakra-colors-brand-neonBlue)"
           className="glow"
         >
-          <CardBody p={8}>
-            <Flex direction={{ base: "column", md: "row" }} align="center" justify="space-between">
-              <VStack align="start" spacing={4}>
-                <Box
-                  bg="brand.glass"
-                  border="2px solid"
-                  borderColor="brand.neonBlue"
-                  color="white"
-                  fontWeight="bold"
-                  fontSize="2xl"
-                  borderRadius="50%"
-                  w="64px"
-                  h="64px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="0 0 16px var(--chakra-colors-brand-neonBlue)"
-                  mb={2}
-                  className="glow"
-                >
-                  {(() => {
-                    const name = user.username || user.email || "";
-                    return name.split(/\s|@/)[0];
-                  })()}
-                </Box>
-                <Text fontSize={{ base: "sm", md: "md", lg: "lg" }} fontWeight="bold" color="white">
-                  {user.username || user.email}
-                </Text>
-              </VStack>
-              <VStack align="end" spacing={2}>
-                <Text fontSize={{ base: "xs", md: "sm" }} color="gray.400">
-                  الرصيد الحالي
-                </Text>
-                <Text fontSize={{ base: "xl", md: "2xl", lg: "3xl" }} fontWeight="bold" className="gradient-text">
-                  {formatUSDT(user.balance)}
-                </Text>
-              </VStack>
-            </Flex>
-          </CardBody>
-        </Card>
+          {(() => {
+            const name = user.username || user.email || "";
+            return name.split(/\s|@/)[0];
+          })()}
+        </Box>
+
+        {/* Username */}
+        <Text fontSize={{ base: "sm", md: "md", lg: "lg" }} fontWeight="bold" color="white">
+          {user.username || user.email}
+        </Text>
+      </VStack>
+
+      <VStack spacing={2} align={{ base: "center", md: "end" }} mt={{ base: 4, md: 0 }}>
+        <Text fontSize={{ base: "xs", md: "sm" }} color="gray.400">
+          الرصيد الحالي
+        </Text>
+        <Text fontSize={{ base: "xl", md: "2xl", lg: "3xl" }} fontWeight="bold" className="gradient-text">
+          {formatUSDT(user.balance)}
+        </Text>
+      </VStack>
+    </Flex>
+  </CardBody>
+</Card>
 
         <SimpleGrid columns={{ base: 2, md: 2, lg: 4 }} spacing={6}>
           <Card bg="brand.glass" border="1px solid" borderColor="brand.glassBorder">
