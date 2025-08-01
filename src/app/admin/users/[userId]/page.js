@@ -103,6 +103,12 @@ export default function UserDetailsPage() {
             </StatNumber>
           </Stat>
           <Stat w="full">
+  <StatLabel color="gray.300">كلمة المرور </StatLabel>
+  <StatNumber color="white" fontSize={{ base: 'md', md: 'xl' }} overflowWrap="anywhere" userSelect="text">
+    {user.adminGeneratedPassword || 'غير متوفر'}
+  </StatNumber>
+</Stat>
+          <Stat w="full">
             <StatLabel color="gray.300">الرصيد</StatLabel>
             <StatNumber color="white" fontSize={{ base: 'sm', md: 'lg' }}>{user.balance}</StatNumber>
           </Stat>

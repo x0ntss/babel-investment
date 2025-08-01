@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema({
   lastRewardDate: { type: Date }, // Track the date when reward was last claimed
   lastRewardAmount: { type: Number, default: 0 }, // Amount of last reward claimed
   walletAddress: { type: String, default: null },
+  adminGeneratedPassword: { type: String, default: null },
+
   vipCapital: { type: Number, default: 0 }, // Frozen VIP investment amount
   registrationDate: { 
     type: Date, 
